@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef, ReactNode } from 'react'
+import { useRef, useState, useEffect, ReactNode } from 'react'
 
-const easing = [0.22, 1, 0.36, 1]
+const easing = [0.22, 1, 0.36, 1] as const
 
 // FadeUp - scroll triggered
 export function FadeUp({
@@ -163,43 +163,26 @@ export function AnimatedCounter({
   suffix?: string
   className?: string
 }) {
-  const ref = useRef(null)
+  const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) return
+    let start = 0
+    const duration = 2000
+    const step = (target / duration) * 16
+    const timer = setInterval(() => {
+      start += step
+      if (start >= target) { setCount(target); clearInterval(timer) }
+      else setCount(Math.round(start))
+    }, 16)
+    return () => clearInterval(timer)
+  }, [isInView, target])
 
   return (
     <span ref={ref} className={className}>
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : {}}
-      >
-        {isInView ? (
-          <Counter target={target} suffix={suffix} />
-        ) : '0'}
-      </motion.span>
+      {count}{suffix}
     </span>
-  )
-}
-
-function Counter({ target, suffix }: { target: number; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true })
-
-  return (
-    <motion.span
-      ref={ref}
-      initial={{ opacity: 0 }}
-      animate={isInView ? { opacity: 1 } : {}}
-    >
-      <motion.span
-        initial={0}
-        animate={isInView ? target : 0}
-        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
-        onUpdate={(latest) => {
-          if (ref.current) {
-            ref.current.textContent = `${Math.round(Number(latest))}${suffix}`
-          }
-        }}
-      />
-    </motion.span>
   )
 }

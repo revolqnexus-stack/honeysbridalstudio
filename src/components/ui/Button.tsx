@@ -1,12 +1,16 @@
 import { motion } from 'framer-motion'
 import { cn } from '@/utils/cn'
-import { ButtonHTMLAttributes, ReactNode } from 'react'
+import { ReactNode, MouseEventHandler } from 'react'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps {
   variant?: 'primary' | 'ghost' | 'outline'
   children: ReactNode
   href?: string
   icon?: ReactNode
+  className?: string
+  onClick?: MouseEventHandler<HTMLButtonElement>
+  type?: 'button' | 'submit' | 'reset'
+  disabled?: boolean
 }
 
 export function Button({ 
@@ -15,7 +19,9 @@ export function Button({
   className,
   href,
   icon,
-  ...props 
+  onClick,
+  type = 'button',
+  disabled,
 }: ButtonProps) {
   const baseStyles = 'inline-flex items-center justify-center gap-2.5 px-8 py-3.5 font-sans text-xs font-medium uppercase tracking-[0.1em] rounded-xl transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] whitespace-nowrap'
   
@@ -25,21 +31,31 @@ export function Button({
     outline: 'bg-transparent text-dark border border-dark hover:bg-dark hover:text-white hover:-translate-y-0.5 hover:shadow-md',
   }
 
-  const MotionButton = motion.button
-  const MotionLink = motion.a
-
-  const Component = href ? MotionLink : MotionButton
+  if (href) {
+    return (
+      <motion.a
+        href={href}
+        className={cn(baseStyles, variants[variant], className)}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {children}
+        {icon && <span className="inline-flex">{icon}</span>}
+      </motion.a>
+    )
+  }
 
   return (
-    <Component
-      href={href}
+    <motion.button
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
       className={cn(baseStyles, variants[variant], className)}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      {...(href ? {} : props)}
     >
       {children}
       {icon && <span className="inline-flex">{icon}</span>}
-    </Component>
+    </motion.button>
   )
 }

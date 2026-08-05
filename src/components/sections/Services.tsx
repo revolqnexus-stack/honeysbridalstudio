@@ -24,7 +24,7 @@ export function Services() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           stagger={0.1}
         >
-          {SERVICES.map((service, i) => (
+          {SERVICES.map((service) => (
             <StaggerItem key={service.id}>
               <motion.div
                 className="group bg-white rounded-[14px] overflow-hidden shadow-sm border border-dark/5 cursor-pointer"

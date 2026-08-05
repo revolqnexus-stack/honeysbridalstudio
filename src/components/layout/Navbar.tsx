@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValue as _useMotionValue, useSpring as _useSpring } from 'framer-motion'
 import { NAV_LINKS, SITE_CONFIG } from '@/constants'
 import { cn } from '@/utils/cn'
 

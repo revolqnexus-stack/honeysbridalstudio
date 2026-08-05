@@ -21,8 +21,7 @@ export function Loader() {
 
   return (
     <AnimatePresence>
-      {phase !== 'done' && (
-        <motion.div
+      <motion.div
           className="fixed inset-0 z-[9999] bg-dark flex flex-col items-center justify-center gap-8"
           animate={phase === 'out' ? { y: '-100%' } : { y: 0 }}
           transition={
@@ -79,7 +78,6 @@ export function Loader() {
             />
           </div>
         </motion.div>
-      )}
     </AnimatePresence>
   )
 }

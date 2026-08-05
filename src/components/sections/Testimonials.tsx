@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/ui/PremiumAnimations'
+import { FadeUp } from '@/components/ui/PremiumAnimations'
 import { TESTIMONIALS } from '@/constants'
 
 // RAF-driven drag marquee for testimonials
@@ -11,8 +10,8 @@ export function Testimonials() {
   const isDragging = useRef(false)
   const dragStart = useRef(0)
   const rafRef = useRef<number>(0)
-  const resumeTimer = useRef<ReturnType<typeof setTimeout>>()
-  const [paused, setPaused] = useState(false)
+  const resumeTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const [_paused, setPaused] = useState(false)
   const pausedRef = useRef(false)
 
   useEffect(() => {

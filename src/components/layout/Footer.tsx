@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { SITE_CONFIG } from '@/constants'
 
 export function Footer() {
