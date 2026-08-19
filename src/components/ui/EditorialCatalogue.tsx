@@ -248,10 +248,25 @@ export function CategoryTabs({
   layoutId = 'catalogue-tab-indicator',
 }: CategoryTabsProps) {
   const tabRefs = useRef(new Map<string, HTMLButtonElement>())
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const isInitialMount = useRef(true)
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
     const activeTab = tabRefs.current.get(activeSlug)
-    activeTab?.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' })
+    const container = scrollContainerRef.current
+    if (!activeTab || !container) return
+
+    const tabRect = activeTab.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
+    const offset = tabRect.left - containerRect.left + container.scrollLeft
+    const targetScroll = offset - container.clientWidth / 2 + tabRect.width / 2
+
+    container.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' })
   }, [activeSlug])
 
   return (
@@ -263,6 +278,7 @@ export function CategoryTabs({
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
       <div
+        ref={scrollContainerRef}
         className="-mx-6 overflow-x-auto px-6 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden"
       >
         <div

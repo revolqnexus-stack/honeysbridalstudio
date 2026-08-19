@@ -13,6 +13,9 @@ export function Loader() {
     const t2 = setTimeout(() => {
       setPhase('done')
       document.body.classList.remove('no-scroll')
+      if (!window.location.hash) {
+        window.scrollTo(0, 0)
+      }
     }, 3000)
     return () => { clearTimeout(t1); clearTimeout(t2); document.body.classList.remove('no-scroll') }
   }, [])
