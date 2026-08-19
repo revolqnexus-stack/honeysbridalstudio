@@ -16,6 +16,9 @@ export default {
         'gold-light': '#D97706',
         text: '#1A1410',
         'text-muted': '#6B5E54',
+        blush: '#F5E8E4',
+        'blush-row': '#FBF6F3',
+        peach: '#E8C4B8',
       },
       fontFamily: {
         serif: ['Playfair Display', 'Cormorant Garamond', 'serif'],

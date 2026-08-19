@@ -463,6 +463,34 @@ export const SERVICE_CATEGORIES = [
     tagline: "Artful nail design and intricate mehendi for celebrations and bridal moments.",
     image: "/what we offer pic/mehndi design.jpg.jpeg",
     imageAlt: "Mehendi and nail art at Honey's",
+    priceColumns: [
+      { key: "priceBoth", label: "Both / Feet" },
+      { key: "priceOne", label: "One Hand" },
+    ] as const,
+    groups: [
+      {
+        label: "Nail Art & Polish",
+        services: [
+          {
+            name: "Nail Art",
+            description: "Creative nail design for occasions, celebrations and everyday elegance.",
+          },
+        ],
+      },
+      {
+        label: "Mehendi",
+        services: [
+          {
+            name: "Mehendi Work",
+            description: "Beautiful henna designs for festivals, functions and special events.",
+          },
+          {
+            name: "Bridal Mehendi",
+            description: "Elaborate bridal mehendi crafted with tradition, detail and artistry.",
+          },
+        ],
+      },
+    ] as const,
     services: [
       {
         name: "Nail Art",

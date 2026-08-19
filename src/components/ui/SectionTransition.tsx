@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -98,6 +98,73 @@ export function SectionOrnament({ label, variant = 'light' }: SectionOrnamentPro
   )
 }
 
+type InterludeCopyProps = {
+  eyebrow: string
+  title: string
+  subtitle?: string
+  align: 'left' | 'center'
+}
+
+function InterludeCopy({ eyebrow, title, subtitle, align }: InterludeCopyProps) {
+  const textShadow = '0 2px 24px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.35)'
+
+  return (
+    <div
+      className={`w-full ${
+        align === 'center'
+          ? 'mx-auto max-w-[min(100%,34rem)] text-center md:max-w-2xl'
+          : 'max-w-[min(100%,28rem)] md:max-w-xl'
+      }`}
+    >
+      <motion.p
+        className="mb-2 font-sans text-[0.625rem] font-medium uppercase tracking-[0.24em] text-gold md:mb-3 md:text-[0.6875rem] md:tracking-[0.28em]"
+        style={{ textShadow }}
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.65, ease }}
+      >
+        {eyebrow}
+      </motion.p>
+
+      <motion.h2
+        className="text-balance font-serif text-[clamp(1.75rem,5.8vw,3rem)] font-normal leading-[1.12] text-white md:text-[clamp(2rem,3.2vw,3rem)] md:leading-[1.08] lg:text-5xl"
+        style={{ textShadow }}
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.65, delay: 0.06, ease }}
+      >
+        {title}
+      </motion.h2>
+
+      {subtitle && (
+        <motion.p
+          className={`mt-3 font-sans text-sm leading-relaxed text-white/75 md:mt-4 md:text-base md:text-white/60 ${
+            align === 'center' ? 'mx-auto max-w-prose' : 'max-w-md'
+          }`}
+          style={{ textShadow }}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.65, delay: 0.12, ease }}
+        >
+          {subtitle}
+        </motion.p>
+      )}
+
+      <motion.div
+        className={`mt-5 h-px max-w-[72px] bg-gold/60 md:mt-6 md:max-w-[100px] ${align === 'center' ? 'mx-auto' : ''}`}
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.75, delay: 0.18, ease }}
+        style={{ originX: align === 'center' ? 0.5 : 0 }}
+      />
+    </div>
+  )
+}
+
 type StudioInterludeProps = {
   src: string
   fallback: string
@@ -120,86 +187,75 @@ export function StudioInterlude({
   align = 'left',
 }: StudioInterludeProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const reducedMotion = useReducedMotion()
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   })
 
-  const imageY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
-  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1, 1.08])
-  const contentOpacity = useTransform(scrollYProgress, [0.15, 0.45, 0.75], [0, 1, 0])
-  const contentY = useTransform(scrollYProgress, [0.15, 0.45], [24, 0])
+  const imageY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reducedMotion ? ['0%', '0%'] : ['-6%', '6%'],
+  )
+  const imageScale = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    reducedMotion ? [1, 1, 1] : [1.06, 1, 1.06],
+  )
 
   const heights = {
-    sm: 'min-h-[42vh] md:min-h-[48vh]',
-    md: 'min-h-[52vh] md:min-h-[62vh]',
-    lg: 'min-h-[62vh] md:min-h-[72vh]',
+    sm: 'min-h-[50vh] md:min-h-[52vh]',
+    md: 'min-h-[58vh] md:min-h-[64vh]',
+    lg: 'min-h-[64vh] md:min-h-[72vh]',
   }
+
+  const overlayPosition =
+    align === 'center'
+      ? 'items-center justify-center px-5 py-14 text-center md:px-10 md:py-16'
+      : 'items-end justify-start px-5 pb-11 pt-16 md:px-10 md:pb-16 md:pt-20 lg:px-12'
 
   return (
     <div
       ref={ref}
       data-nav-surface="dark"
-      className={`relative w-full overflow-hidden ${heights[height]}`}
+      className={`relative isolate w-full overflow-hidden ${heights[height]}`}
     >
       <motion.div className="absolute inset-0" style={{ y: imageY, scale: imageScale }}>
         <StudioImage src={src} fallback={fallback} alt={alt} className="h-full w-full object-cover" />
       </motion.div>
 
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(105deg, rgba(12,10,9,0.82) 0%, rgba(12,10,9,0.55) 42%, rgba(12,10,9,0.25) 100%)',
-        }}
-      />
-
-      <motion.div
-        className={`relative z-10 flex h-full items-end px-6 pb-12 md:px-10 md:pb-16 lg:px-12 ${
-          align === 'center' ? 'justify-center text-center' : 'justify-start'
-        }`}
-        style={{ opacity: contentOpacity, y: contentY }}
-      >
-        <div className={align === 'center' ? 'max-w-2xl' : 'max-w-xl'}>
-          <motion.p
-            className="mb-3 font-sans text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-gold"
-            initial={{ opacity: 0, x: -12 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, ease }}
-          >
-            {eyebrow}
-          </motion.p>
-          <motion.h2
-            className="font-serif text-3xl font-normal leading-tight text-white md:text-4xl lg:text-5xl"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.7, delay: 0.08, ease }}
-          >
-            {title}
-          </motion.h2>
-          {subtitle && (
-            <motion.p
-              className="mt-4 font-sans text-sm leading-relaxed text-white/55 md:text-base"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.7, delay: 0.16, ease }}
-            >
-              {subtitle}
-            </motion.p>
-          )}
-          <motion.div
-            className={`mt-6 h-px max-w-[100px] bg-gold/50 ${align === 'center' ? 'mx-auto' : ''}`}
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.24, ease }}
-            style={{ originX: align === 'center' ? 0.5 : 0 }}
+      {align === 'center' ? (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(12,10,9,0.62) 0%, rgba(12,10,9,0.38) 42%, rgba(12,10,9,0.72) 100%)',
+          }}
+        />
+      ) : (
+        <>
+          <div
+            className="pointer-events-none absolute inset-0 md:hidden"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(12,10,9,0.35) 0%, rgba(12,10,9,0.2) 35%, rgba(12,10,9,0.82) 100%)',
+            }}
           />
-        </div>
-      </motion.div>
+          <div
+            className="pointer-events-none absolute inset-0 hidden md:block"
+            style={{
+              background:
+                'linear-gradient(105deg, rgba(12,10,9,0.84) 0%, rgba(12,10,9,0.52) 38%, rgba(12,10,9,0.18) 68%, rgba(12,10,9,0.08) 100%)',
+            }}
+          />
+        </>
+      )}
+
+      <div className={`absolute inset-0 z-10 flex ${overlayPosition}`}>
+        <InterludeCopy eyebrow={eyebrow} title={title} subtitle={subtitle} align={align} />
+      </div>
     </div>
   )
 }
