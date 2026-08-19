@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SERVICE_CATEGORIES, STUDIO_GALLERY_STRIP, LAYOUT } from '@/constants'
-import { StudioGalleryStrip } from '@/components/ui/SectionTransition'
+import { SERVICE_CATEGORIES, LAYOUT } from '@/constants'
 import {
   CategoryTabs,
   EditorialCategoryHeader,
@@ -46,10 +45,6 @@ export function Services() {
           ariaLabel="Service categories"
           layoutId="services-tab-indicator"
         />
-
-        <div className="hidden md:block">
-          <StudioGalleryStrip images={STUDIO_GALLERY_STRIP} />
-        </div>
 
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,40%)] lg:gap-14 xl:gap-20">
           <div className="min-w-0">
@@ -164,10 +159,6 @@ export function Services() {
               </motion.div>
             </div>
           </div>
-        </div>
-
-        <div className="mt-10 md:hidden">
-          <StudioGalleryStrip images={STUDIO_GALLERY_STRIP} />
         </div>
       </div>
     </section>

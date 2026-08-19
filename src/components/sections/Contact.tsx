@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
+import { WhatsAppEnquiryForm } from '@/components/ui/WhatsAppEnquiryForm'
 import { SITE_CONFIG } from '@/constants'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
@@ -14,7 +15,8 @@ export function Contact() {
       className="section-gap bg-dark"
     >
       <div className="container-custom">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="text-center lg:text-left">
           {/* Header */}
           <motion.p
             className="text-xs font-medium tracking-[0.25em] uppercase text-gold mb-4"
@@ -103,7 +105,7 @@ export function Contact() {
 
           {/* CTAs */}
           <motion.div
-            className="flex flex-wrap gap-4 justify-center"
+            className="flex flex-wrap gap-4 justify-center lg:justify-start"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -124,6 +126,17 @@ export function Contact() {
             >
               View Instagram
             </Button>
+          </motion.div>
+          </div>
+
+          <motion.div
+            id="enquire"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <WhatsAppEnquiryForm variant="inline" />
           </motion.div>
         </div>
       </div>

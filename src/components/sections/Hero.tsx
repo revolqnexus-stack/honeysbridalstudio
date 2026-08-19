@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from 'framer-motion'
 import { LAYOUT, SITE_CONFIG } from '@/constants'
+import { useEnquiryModal } from '@/context/EnquiryModalContext'
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null)
@@ -44,6 +45,8 @@ export function Hero() {
     }
   }
 
+  const { open: openEnquiry } = useEnquiryModal()
+
   const base = 2.5
   const s = (i: number) => ({ duration: 0.8, delay: base + i * 0.1, ease: [0.22, 1, 0.36, 1] as const })
 
@@ -58,7 +61,7 @@ export function Hero() {
       <motion.img
         src="/photos/hero.webp"
         alt=""
-        className="absolute inset-0 z-[1] h-full w-full object-cover object-[center_35%] md:object-[68%_18%]"
+        className="absolute inset-0 z-[1] h-full w-full object-cover object-[center_38%] md:object-[74%_20%]"
         fetchPriority="high"
         animate={{ opacity: videoReady ? 0 : 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -67,7 +70,7 @@ export function Hero() {
       <motion.video
         ref={videoDesktopRef}
         className="absolute inset-0 z-[0] hidden h-full w-full object-cover md:block"
-        style={{ objectPosition: '68% 18%', scale: videoScale }}
+        style={{ objectPosition: '74% 20%', scale: videoScale }}
         src="/photos/hero video pc.mp4"
         autoPlay
         muted
@@ -96,25 +99,17 @@ export function Hero() {
         onCanPlayThrough={handleVideoReady}
       />
 
-      {/* ── CINEMATIC OVERLAY LAYER ── */}
+      {/* ── CINEMATIC GRADE — soft vignette, no hard panels ── */}
       <div
         className="pointer-events-none absolute inset-0 z-[2]"
-        style={{ background: 'rgba(25, 15, 8, 0.12)' }}
+        style={{ background: 'rgba(18, 12, 8, 0.06)' }}
       />
 
       <div
-        className="pointer-events-none absolute inset-0 z-[3] hidden md:block"
+        className="pointer-events-none absolute inset-0 z-[3]"
         style={{
           background:
-            'linear-gradient(90deg, rgba(7,6,4,.92) 0%, rgba(7,6,4,.78) 28%, rgba(7,6,4,.45) 48%, rgba(7,6,4,.12) 62%, transparent 78%)',
-        }}
-      />
-
-      <div
-        className="pointer-events-none absolute inset-0 z-[3] md:hidden"
-        style={{
-          background:
-            'linear-gradient(180deg, rgba(7,6,4,.72) 0%, rgba(7,6,4,.48) 35%, rgba(7,6,4,.22) 65%, transparent 100%)',
+            'radial-gradient(ellipse 90% 80% at 50% 42%, transparent 42%, rgba(6,5,4,0.32) 100%)',
         }}
       />
 
@@ -122,7 +117,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 z-[4]"
         style={{
           background:
-            'linear-gradient(0deg, rgba(5,4,3,.38) 0%, rgba(5,4,3,.1) 22%, transparent 48%)',
+            'linear-gradient(180deg, rgba(6,5,4,0.28) 0%, transparent 28%, transparent 68%, rgba(6,5,4,0.42) 100%)',
         }}
       />
 
@@ -130,7 +125,15 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 z-[5] hidden md:block"
         style={{
           background:
-            'radial-gradient(ellipse 120% 80% at 18% 50%, rgba(8,7,5,.75) 0%, rgba(8,7,5,.4) 42%, transparent 65%)',
+            'linear-gradient(108deg, rgba(8,6,4,0.5) 0%, rgba(8,6,4,0.22) 18%, rgba(8,6,4,0.06) 32%, transparent 46%)',
+        }}
+      />
+
+      <div
+        className="pointer-events-none absolute inset-0 z-[5] md:hidden"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(6,5,4,0.55) 0%, rgba(6,5,4,0.28) 28%, transparent 58%)',
         }}
       />
 
@@ -155,21 +158,8 @@ export function Hero() {
           }}
         >
           {/* Desktop */}
-          <div
-            className="relative hidden md:block"
-            style={{
-              maxWidth: '540px',
-              marginLeft: 'clamp(1.5rem, 5vw, 3.5rem)',
-              paddingLeft: 'clamp(0.5rem, 2vw, 1.5rem)',
-            }}
-          >
-            <div
-              className="pointer-events-none absolute -inset-x-6 -inset-y-8 rounded-2xl backdrop-blur-[2px]"
-              style={{ background: 'rgba(8, 7, 5, 0.35)' }}
-              aria-hidden="true"
-            />
-
-            <div className="relative">
+          <div className="container-custom hidden md:block">
+            <div className="relative max-w-xl lg:max-w-[540px]">
             <motion.p
               className="font-sans uppercase"
               style={{
@@ -191,7 +181,7 @@ export function Hero() {
               style={{
                 lineHeight: 0.95,
                 letterSpacing: '-0.04em',
-                textShadow: '0 2px 8px rgba(0,0,0,0.45), 0 12px 40px rgba(0,0,0,0.35)',
+                textShadow: '0 1px 2px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.45), 0 24px 64px rgba(0,0,0,0.25)',
                 maxWidth: '520px',
               }}
               initial={{ opacity: 0, y: 22 }}
@@ -258,8 +248,9 @@ export function Hero() {
                 fontWeight: 400,
                 fontSize: '0.9375rem',
                 lineHeight: 1.7,
-                color: 'rgba(245,240,232,0.72)',
+                color: 'rgba(245,240,232,0.78)',
                 maxWidth: '22rem',
+                textShadow: '0 1px 3px rgba(0,0,0,0.45)',
               }}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -274,12 +265,9 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={s(5)}
             >
-              <motion.a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollTo('#contact')
-                }}
+              <motion.button
+                type="button"
+                onClick={openEnquiry}
                 className="inline-flex items-center justify-center rounded-full border border-[#C79A4A] bg-[#C79A4A] px-7 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.13em] text-white"
                 style={{
                   height: '2.75rem',
@@ -295,7 +283,7 @@ export function Hero() {
                 transition={{ duration: 0.22 }}
               >
                 Book Your Bridal Experience
-              </motion.a>
+              </motion.button>
 
               <motion.a
                 href="#academy"
@@ -306,14 +294,16 @@ export function Hero() {
                 className="inline-flex items-center gap-2 rounded-full border px-5 font-sans text-[0.65rem] font-medium uppercase tracking-[0.13em]"
                 style={{
                   height: '2.75rem',
-                  color: 'rgba(245,240,232,0.88)',
-                  background: 'rgba(8,7,5,0.35)',
-                  borderColor: 'rgba(199,154,74,0.32)',
+                  color: 'rgba(255,253,248,0.92)',
+                  background: 'rgba(255,255,255,0.07)',
+                  borderColor: 'rgba(255,255,255,0.28)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
                 }}
                 whileHover={{
                   color: '#FFFDF8',
-                  background: 'rgba(255,255,255,0.08)',
-                  borderColor: 'rgba(199,154,74,0.5)',
+                  background: 'rgba(255,255,255,0.14)',
+                  borderColor: 'rgba(199,154,74,0.55)',
                 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.22 }}
@@ -324,8 +314,6 @@ export function Hero() {
             </motion.div>
             </div>
           </div>
-
-          {/* Mobile — separate composition, anchored lower */}
           <div
             className="flex flex-1 flex-col justify-end px-6 md:hidden"
             style={{ paddingBottom: '1.5rem' }}
@@ -433,23 +421,16 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={s(5)}
             >
-              <motion.a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollTo('#contact')
-                }}
+              <motion.button
+                type="button"
+                onClick={openEnquiry}
                 className="inline-flex h-11 w-full max-w-xs items-center justify-center rounded-full border border-[#C79A4A] bg-[#C79A4A] font-sans text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white"
                 style={{ boxShadow: '0 4px 20px rgba(199,154,74,0.28)' }}
-                whileHover={{
-                  background: '#D5A85A',
-                  borderColor: '#D5A85A',
-                }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.22 }}
               >
                 Book Your Bridal Experience
-              </motion.a>
+              </motion.button>
 
               <motion.a
                 href="#academy"
@@ -459,13 +440,15 @@ export function Hero() {
                 }}
                 className="inline-flex h-11 w-full max-w-xs items-center justify-center gap-2 rounded-full border font-sans text-[0.62rem] font-medium uppercase tracking-[0.12em]"
                 style={{
-                  color: 'rgba(245,240,232,0.9)',
-                  background: 'rgba(8,7,5,0.4)',
-                  borderColor: 'rgba(199,154,74,0.3)',
+                  color: 'rgba(255,253,248,0.92)',
+                  background: 'rgba(255,255,255,0.08)',
+                  borderColor: 'rgba(255,255,255,0.25)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
                 }}
                 whileHover={{
                   color: '#FFFDF8',
-                  background: 'rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.14)',
                   borderColor: 'rgba(199,154,74,0.45)',
                 }}
                 whileTap={{ scale: 0.97 }}

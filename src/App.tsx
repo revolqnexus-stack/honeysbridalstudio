@@ -3,8 +3,11 @@ import { Loader } from '@/components/ui/Loader'
 import { FloatingAmbience } from '@/components/ui/FloatingAmbience'
 import { ScrollToTop } from '@/components/ui/ScrollToTop'
 import { SectionOrnament, StudioInterlude } from '@/components/ui/SectionTransition'
+import { EnquiryModal } from '@/components/ui/EnquiryModal'
+import { EnquiryModalProvider } from '@/context/EnquiryModalContext'
 import { Navbar } from '@/components/layout/Navbar'
 import { About } from '@/components/sections/About'
+import { Studio } from '@/components/sections/Studio'
 import { Hero } from '@/components/sections/Hero'
 import { Marquee } from '@/components/sections/Marquee'
 import { HoneysWorld } from '@/components/sections/HoneysWorld'
@@ -25,7 +28,7 @@ function App() {
   const [studioOne, studioTwo, studioThree] = STUDIO_INTERIOR_IMAGES
 
   return (
-    <>
+    <EnquiryModalProvider>
       <Loader />
       <FloatingAmbience />
       <Navbar />
@@ -33,6 +36,7 @@ function App() {
         <Hero />
         <Marquee />
         <About />
+        <Studio />
         <SectionOrnament label="Three Worlds" variant="champagne" />
         <HoneysWorld />
 
@@ -84,7 +88,8 @@ function App() {
       <Footer />
       <WhatsAppFloat />
       <ScrollToTop />
-    </>
+      <EnquiryModal />
+    </EnquiryModalProvider>
   )
 }
 

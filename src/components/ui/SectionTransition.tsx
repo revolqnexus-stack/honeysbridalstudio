@@ -206,12 +206,13 @@ export function StudioInterlude({
 
 type StudioGalleryStripProps = {
   images: readonly { src: string; fallback: string; alt: string; caption: string }[]
+  className?: string
 }
 
-export function StudioGalleryStrip({ images }: StudioGalleryStripProps) {
+export function StudioGalleryStrip({ images, className = '' }: StudioGalleryStripProps) {
   return (
     <motion.div
-      className="mb-12 grid grid-cols-3 gap-2 md:mb-14 md:gap-3"
+      className={`grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-3 ${className}`.trim()}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-60px' }}
@@ -241,12 +242,12 @@ export function StudioGalleryStrip({ images }: StudioGalleryStripProps) {
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div
-            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-500 sm:opacity-0 sm:group-hover:opacity-100"
             style={{
               background: 'linear-gradient(180deg, transparent 40%, rgba(12,10,9,0.55) 100%)',
             }}
           />
-          <figcaption className="absolute bottom-0 left-0 right-0 p-3 opacity-0 transition-opacity duration-500 group-hover:opacity-100 md:p-4">
+          <figcaption className="absolute bottom-0 left-0 right-0 p-3 opacity-100 sm:opacity-0 sm:transition-opacity sm:duration-500 sm:group-hover:opacity-100 md:p-4">
             <span className="font-sans text-[0.5625rem] uppercase tracking-[0.18em] text-gold/90">
               {String(index + 1).padStart(2, '0')}
             </span>
