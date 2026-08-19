@@ -4,55 +4,24 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#0C0A09] pt-20 pb-6 relative overflow-hidden">
+    <footer data-nav-surface="dark" className="bg-[#0C0A09] pt-20 pb-6 relative overflow-hidden">
       <div className="container-custom">
         {/* Top */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-16 border-b border-white/6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-white/6">
           {/* Brand */}
-          <div>
+          <div className="lg:col-span-2">
             <div className="flex flex-col leading-none mb-4">
               <span className="font-serif text-4xl italic text-white">
                 Honey's
               </span>
               <span className="font-sans text-[0.55rem] tracking-[0.3em] uppercase text-white/40">
-                BRIDAL STUDIO
+                Bridal Artistry · Kerala
               </span>
             </div>
-            <p className="text-sm text-white/40 leading-relaxed max-w-xs">
-              Luxury bridal makeup & beauty by certified airbrush artist Vineetha Benny, Rajakumari, Idukki, Kerala.
+            <p className="text-sm text-white/40 leading-relaxed max-w-xs mb-6">
+              From signature bridal transformations to professional makeup education, Honey's brings beauty, artistry and technique together under one roof.
             </p>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-[0.7rem] tracking-[0.2em] uppercase text-white/30 mb-6">
-              Quick Links
-            </h4>
-            <div className="flex flex-col gap-3">
-              <a href="#about" className="text-sm text-white/50 hover:text-gold transition-colors">
-                About
-              </a>
-              <a href="#services" className="text-sm text-white/50 hover:text-gold transition-colors">
-                Services
-              </a>
-              <a href="#portfolio" className="text-sm text-white/50 hover:text-gold transition-colors">
-                Portfolio
-              </a>
-              <a href="#testimonials" className="text-sm text-white/50 hover:text-gold transition-colors">
-                Testimonials
-              </a>
-              <a href="#contact" className="text-sm text-white/50 hover:text-gold transition-colors">
-                Contact
-              </a>
-            </div>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <h4 className="text-[0.7rem] tracking-[0.2em] uppercase text-white/30 mb-6">
-              Connect
-            </h4>
-            <div className="flex flex-col gap-4">
+            <div className="flex gap-4">
               <a 
                 href={SITE_CONFIG.instagram}
                 target="_blank"
@@ -79,11 +48,93 @@ export function Footer() {
               </a>
             </div>
           </div>
+
+          {/* Bridal Studio */}
+          <div>
+            <h4 className="text-[0.7rem] tracking-[0.2em] uppercase text-gold/60 mb-6">
+              Bridal Studio
+            </h4>
+            <div className="flex flex-col gap-3">
+              <a href="#bridal-studio" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Bridal Makeup
+              </a>
+              <a href="#bridal-studio" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Bridal Styling
+              </a>
+              <a href="#portfolio" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Portfolio
+              </a>
+              <a href="#contact" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Bridal Enquiry
+              </a>
+            </div>
+          </div>
+
+          {/* Academy */}
+          <div>
+            <h4 className="text-[0.7rem] tracking-[0.2em] uppercase text-gold/60 mb-6">
+              Academy
+            </h4>
+            <div className="flex flex-col gap-3">
+              <a href="#academy" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Academy
+              </a>
+              <a href="#academy" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Courses
+              </a>
+              <a href="#academy" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Student Work
+              </a>
+              <a href="#contact" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Academy Enquiry
+              </a>
+            </div>
+          </div>
+
+          {/* Beauty */}
+          <div>
+            <h4 className="text-[0.7rem] tracking-[0.2em] uppercase text-gold/60 mb-6">
+              Beauty
+            </h4>
+            <div className="flex flex-col gap-3">
+              <a href="#services" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Makeup
+              </a>
+              <a href="#services" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Hair
+              </a>
+              <a href="#services" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Skin
+              </a>
+              <a href="#services" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Beauty Care
+              </a>
+              <a href="#services" className="text-sm text-white/50 hover:text-gold transition-colors">
+                Nails & Mehendi
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Bottom */}
-        <div className="pt-6 text-center text-xs text-white/20">
-          <p>© {currentYear} Honey's Bridal Studio. All rights reserved.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+          <div className="text-xs text-white/20">
+            <p>© {currentYear} Honey's. All rights reserved.</p>
+          </div>
+          <div className="flex gap-6 justify-start md:justify-end">
+            <a href="#" className="text-xs text-white/30 hover:text-gold transition-colors">
+              Privacy
+            </a>
+            <a href="#" className="text-xs text-white/30 hover:text-gold transition-colors">
+              Terms
+            </a>
+            <a href="#about" className="text-xs text-white/30 hover:text-gold transition-colors">
+              About
+            </a>
+            <a href="#contact" className="text-xs text-white/30 hover:text-gold transition-colors">
+              Contact
+            </a>
+          </div>
         </div>
       </div>
 

@@ -5,7 +5,7 @@ export function Marquee() {
   const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 
   return (
-    <div className="bg-dark overflow-hidden py-4 border-t border-b border-white/6">
+    <div data-nav-surface="dark" className="overflow-hidden border-y border-white/6 bg-dark py-4">
       <motion.div
         className="flex gap-10 whitespace-nowrap"
         animate={{ x: ['0%', '-50%'] }}

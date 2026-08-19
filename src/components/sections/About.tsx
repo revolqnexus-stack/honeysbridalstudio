@@ -2,7 +2,7 @@ import { FadeIn, FadeUp, StaggerContainer, StaggerItem } from '@/components/ui/P
 
 export function About() {
   return (
-    <section id="about" className="section-gap bg-bg">
+    <section id="about" data-nav-surface="light" className="section-gap bg-bg">
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
@@ -26,13 +26,14 @@ export function About() {
           {/* Text */}
           <div className="pb-6">
             <FadeUp>
-              <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-gold mb-4">Our Story</p>
+              <p className="mb-3 font-sans text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-gold">Our Story</p>
             </FadeUp>
 
             <FadeUp delay={0.1}>
-              <h2 className="font-serif text-4xl md:text-5xl lg:text-[3.5rem] font-normal text-dark leading-[1.1] mb-6">
+              <h2 className="font-serif text-4xl font-normal leading-[1.05] text-dark md:text-5xl lg:text-[3.5rem] mb-5">
                 The Artist<br /><em className="text-dark-2">Behind the Magic</em>
               </h2>
+              <div className="section-divider mb-6 max-w-[120px]" />
             </FadeUp>
 
             <FadeUp delay={0.2}>

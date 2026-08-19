@@ -56,7 +56,7 @@ export function Testimonials() {
   const doubled = [...TESTIMONIALS, ...TESTIMONIALS]
 
   return (
-    <section id="testimonials" className="section-gap bg-bg-alt overflow-hidden">
+    <section id="testimonials" data-nav-surface="light" className="section-gap bg-bg-alt overflow-hidden">
       <div className="container-custom mb-12 md:mb-16">
         <div className="text-center">
           <FadeUp>
@@ -81,16 +81,16 @@ export function Testimonials() {
       >
         {/* Left fade */}
         <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(to right, #F5F3EF, transparent)' }} />
+          style={{ background: 'linear-gradient(to right, #F0EBE3, transparent)' }} />
         {/* Right fade */}
         <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(to left, #F5F3EF, transparent)' }} />
+          style={{ background: 'linear-gradient(to left, #F0EBE3, transparent)' }} />
 
         <div ref={trackRef} className="flex gap-6 w-max" style={{ transform: 'translateX(0)' }}>
           {doubled.map((t, i) => (
             <div
               key={i}
-              className="w-[340px] flex-shrink-0 bg-white rounded-[14px] p-7 shadow-sm border border-dark/5 flex flex-col gap-4"
+              className="flex w-[340px] flex-shrink-0 flex-col gap-4 border-t border-gold/30 bg-champagne/40 p-7 pt-6"
             >
               <div className="flex gap-1 text-gold">
                 {[...Array(t.rating)].map((_, s) => (

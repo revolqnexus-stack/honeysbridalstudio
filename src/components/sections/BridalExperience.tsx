@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SERVICE_CATEGORIES, STUDIO_GALLERY_STRIP, LAYOUT } from '@/constants'
-import { StudioGalleryStrip } from '@/components/ui/SectionTransition'
+import { LAYOUT, SERVICE_CATEGORIES } from '@/constants'
 import {
   CategoryTabs,
   EditorialCategoryHeader,
@@ -10,13 +9,35 @@ import {
   EditorialServiceList,
 } from '@/components/ui/EditorialCatalogue'
 
-export function Services() {
-  const [activeSlug, setActiveSlug] = useState<string>(SERVICE_CATEGORIES[0].slug)
+const BRIDAL_CATEGORY_SLUGS = ['makeup', 'bridal'] as const
+
+const BRIDAL_PULL_QUOTES = [
+  'Every look begins with understanding your features, your outfit, and the story of your day.',
+  'From the first touch of makeup to the final fold of your saree — every detail is considered.',
+] as const
+
+export function BridalExperience() {
+  const bridalCategories = useMemo(
+    () =>
+      SERVICE_CATEGORIES.filter((category) =>
+        (BRIDAL_CATEGORY_SLUGS as readonly string[]).includes(category.slug),
+      ),
+    [],
+  )
+
+  const [activeSlug, setActiveSlug] = useState<string>(bridalCategories[0]?.slug ?? 'makeup')
 
   const activeCategory =
-    SERVICE_CATEGORIES.find((category) => category.slug === activeSlug) ?? SERVICE_CATEGORIES[0]
+    bridalCategories.find((category) => category.slug === activeSlug) ?? bridalCategories[0]
 
-  const activeIndex = SERVICE_CATEGORIES.findIndex((category) => category.slug === activeSlug)
+  const serviceOffset = useMemo(() => {
+    let offset = 0
+    for (const category of bridalCategories) {
+      if (category.slug === activeSlug) return offset
+      offset += category.services.length
+    }
+    return 0
+  }, [activeSlug, bridalCategories])
 
   const scrollTo = (href: string) => {
     const el = document.querySelector(href)
@@ -28,28 +49,45 @@ export function Services() {
     }
   }
 
-  const isBridalRelated = activeSlug === 'makeup' || activeSlug === 'bridal'
+  if (!activeCategory) return null
 
   return (
-    <section id="services" data-nav-surface="light" className="section-gap overflow-x-hidden bg-bg-alt">
+    <section id="bridal-studio" data-nav-surface="light" className="section-gap bg-bg">
       <div className="container-custom">
         <EditorialMasthead
-          eyebrow="Honey's Beauty House"
-          title="Services"
-          subtitle="From signature bridal artistry to everyday beauty care — explore our full catalogue of treatments, styling and finishing services."
+          eyebrow="Your Day"
+          title="Your Artistry"
+          scriptLine="Beautifully, entirely you."
+          subtitle="Personalized bridal beauty that celebrates your unique style, tradition, and the quiet confidence of your wedding day."
         />
+
+        {/* Editorial bridge */}
+        <motion.blockquote
+          className="mx-auto mb-12 max-w-2xl border-l-2 border-gold/40 py-1 pl-6 md:mb-14"
+          initial={{ opacity: 0, x: -12 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="font-serif text-lg italic leading-relaxed text-dark/85 md:text-xl">
+            &ldquo;Honey&apos;s provides much more than makeup — we craft your complete bridal preparation
+            ritual.&rdquo;
+          </p>
+        </motion.blockquote>
+
+        <div className="mb-8 text-center md:mb-10">
+          <h3 className="font-serif text-3xl font-normal leading-tight text-dark md:text-4xl">
+            The Complete Bridal Experience
+          </h3>
+        </div>
 
         <CategoryTabs
-          categories={SERVICE_CATEGORIES}
+          categories={bridalCategories}
           activeSlug={activeSlug}
           onChange={setActiveSlug}
-          ariaLabel="Service categories"
-          layoutId="services-tab-indicator"
+          ariaLabel="Bridal service categories"
+          layoutId="bridal-tab-indicator"
         />
-
-        <div className="hidden md:block">
-          <StudioGalleryStrip images={STUDIO_GALLERY_STRIP} />
-        </div>
 
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,40%)] lg:gap-14 xl:gap-20">
           <div className="min-w-0">
@@ -79,14 +117,19 @@ export function Services() {
 
                 <EditorialCategoryHeader
                   index={activeCategory.id}
-                  label={activeCategory.navLabel}
+                  label={activeCategory.title}
                   heading={activeCategory.heading}
                   tagline={activeCategory.tagline}
                   serviceCount={activeCategory.services.length}
                 />
 
+                <p className="-mt-4 mb-6 max-w-lg font-sans text-sm italic leading-relaxed text-text-muted/90">
+                  {BRIDAL_PULL_QUOTES[activeCategory.slug === 'makeup' ? 0 : 1]}
+                </p>
+
                 <EditorialServiceList
                   services={activeCategory.services}
+                  startIndex={serviceOffset + 1}
                   onItemClick={() => scrollTo('#contact')}
                 />
 
@@ -94,7 +137,7 @@ export function Services() {
                   className="mt-10 flex flex-wrap items-center gap-4 md:mt-12"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.15 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   <motion.a
                     href="#contact"
@@ -106,22 +149,19 @@ export function Services() {
                     whileHover={{ y: -2, boxShadow: '0 10px 32px rgba(202,138,4,0.28)' }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Enquire About a Service
+                    Plan Your Bridal Experience
                   </motion.a>
-
-                  {isBridalRelated && (
-                    <a
-                      href="#bridal-studio"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        scrollTo('#bridal-studio')
-                      }}
-                      className="inline-flex items-center gap-2 font-sans text-[0.65rem] font-medium uppercase tracking-[0.14em] text-dark/60 transition-colors hover:text-gold"
-                    >
-                      View bridal experience
-                      <span aria-hidden="true">→</span>
-                    </a>
-                  )}
+                  <a
+                    href="#services"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      scrollTo('#services')
+                    }}
+                    className="inline-flex items-center gap-2 font-sans text-[0.65rem] font-medium uppercase tracking-[0.14em] text-dark/60 transition-colors hover:text-gold"
+                  >
+                    Explore all services
+                    <span aria-hidden="true">→</span>
+                  </a>
                 </motion.div>
               </motion.div>
             </AnimatePresence>
@@ -142,32 +182,22 @@ export function Services() {
                     alt={activeCategory.imageAlt}
                     index={activeCategory.id}
                     heading={activeCategory.heading}
-                    caption={`${String(activeIndex + 1).padStart(2, '0')} of ${String(SERVICE_CATEGORIES.length).padStart(2, '0')}`}
+                    caption="Bridal Studio"
                   />
                 </motion.div>
               </AnimatePresence>
 
-              <motion.div
-                key={`meta-${activeCategory.slug}`}
-                className="mt-5 border-t border-dark/8 pt-5"
+              <motion.p
+                key={`note-${activeCategory.slug}`}
+                className="mt-5 font-sans text-[0.6875rem] leading-relaxed tracking-[0.06em] text-text-muted/80"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.15 }}
+                transition={{ delay: 0.2 }}
               >
-                <p className="mb-2 font-sans text-[0.625rem] font-medium uppercase tracking-[0.18em] text-gold/70">
-                  Category {String(activeCategory.id).padStart(2, '0')}
-                </p>
-                <p className="font-sans text-[0.8125rem] leading-relaxed text-text-muted">
-                  Tap any service to enquire — consultations available via WhatsApp for all
-                  treatments listed.
-                </p>
-              </motion.div>
+                On-location across Idukki, Munnar, Ernakulam and surrounding districts.
+              </motion.p>
             </div>
           </div>
-        </div>
-
-        <div className="mt-10 md:hidden">
-          <StudioGalleryStrip images={STUDIO_GALLERY_STRIP} />
         </div>
       </div>
     </section>

@@ -10,7 +10,8 @@ export function Contact() {
     <section 
       ref={sectionRef}
       id="contact" 
-      className="section-gap bg-dark "
+      data-nav-surface="dark"
+      className="section-gap bg-dark"
     >
       <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">

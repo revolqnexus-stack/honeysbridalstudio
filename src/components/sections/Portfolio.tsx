@@ -10,7 +10,8 @@ export function Portfolio() {
     <section 
       ref={sectionRef}
       id="portfolio" 
-      className="section-gap bg-bg "
+      data-nav-surface="light"
+      className="section-gap bg-bg"
     >
       <div className="container-custom">
         {/* Header */}

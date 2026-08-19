@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from 'framer-motion'
+import { LAYOUT, SITE_CONFIG } from '@/constants'
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null)
@@ -10,13 +11,11 @@ export function Hero() {
   const contentOpacity = useTransform(scrollY, [0, 350], [1, 0])
   const contentY = useTransform(scrollY, [0, 350], [0, 40])
 
-  // Continuous slow zoom on the video — 1.00 → 1.03 over 25s, loop
   const videoScaleMotion = useMotionValue(1)
   const videoScale = useSpring(videoScaleMotion, { stiffness: 6, damping: 40 })
 
   const [videoReady, setVideoReady] = useState(false)
 
-  // Start the slow zoom once video starts playing
   const startZoom = () => {
     animate(videoScaleMotion, 1.04, {
       duration: 25,
@@ -26,10 +25,9 @@ export function Hero() {
     })
   }
 
-  // Only mark ready when the browser has buffered enough to play without stalling
   const handleVideoReady = () => {
     const desktopReady = (videoDesktopRef.current?.readyState ?? 0) >= 4
-    const mobileReady  = (videoMobileRef.current?.readyState  ?? 0) >= 4
+    const mobileReady = (videoMobileRef.current?.readyState ?? 0) >= 4
     if (desktopReady || mobileReady) {
       setVideoReady(true)
       startZoom()
@@ -38,10 +36,14 @@ export function Hero() {
 
   const scrollTo = (href: string) => {
     const el = document.querySelector(href)
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' })
+    if (el) {
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - LAYOUT.headerHeightPx,
+        behavior: 'smooth',
+      })
+    }
   }
 
-  // Stagger after loader finishes (2.5 s)
   const base = 2.5
   const s = (i: number) => ({ duration: 0.8, delay: base + i * 0.1, ease: [0.22, 1, 0.36, 1] as const })
 
@@ -49,26 +51,28 @@ export function Hero() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative h-screen min-h-[640px] overflow-hidden flex items-end"
+      data-nav-surface="dark"
+      className="relative h-screen min-h-[640px] overflow-hidden"
     >
-      {/* ── Poster — dissolves into video ── */}
+      {/* ── VIDEO LAYER ── */}
       <motion.img
         src="/photos/hero.webp"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover z-[1]"
-        style={{ objectPosition: 'center top' }}
+        className="absolute inset-0 z-[1] h-full w-full object-cover object-[center_35%] md:object-[68%_18%]"
         fetchPriority="high"
         animate={{ opacity: videoReady ? 0 : 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      {/* ── Desktop Video ── */}
       <motion.video
         ref={videoDesktopRef}
-        className="hidden md:block absolute inset-0 w-full h-full object-cover z-[0]"
-        style={{ objectPosition: 'center top', scale: videoScale }}
+        className="absolute inset-0 z-[0] hidden h-full w-full object-cover md:block"
+        style={{ objectPosition: '68% 18%', scale: videoScale }}
         src="/photos/hero video pc.mp4"
-        autoPlay muted loop playsInline
+        autoPlay
+        muted
+        loop
+        playsInline
         preload="auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: videoReady ? 1 : 0 }}
@@ -76,13 +80,15 @@ export function Hero() {
         onCanPlayThrough={handleVideoReady}
       />
 
-      {/* ── Mobile Video ── */}
       <motion.video
         ref={videoMobileRef}
-        className="md:hidden absolute inset-0 w-full h-full object-cover z-[0]"
-        style={{ objectPosition: 'center top', scale: videoScale }}
+        className="absolute inset-0 z-[0] h-full w-full object-cover md:hidden"
+        style={{ objectPosition: 'center 35%', scale: videoScale }}
         src="/photos/hero video mobile.mp4"
-        autoPlay muted loop playsInline
+        autoPlay
+        muted
+        loop
+        playsInline
         preload="auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: videoReady ? 1 : 0 }}
@@ -90,170 +96,399 @@ export function Hero() {
         onCanPlayThrough={handleVideoReady}
       />
 
-      {/* ── Focal glow — naturally draws the eye to the bride ── */}
+      {/* ── CINEMATIC OVERLAY LAYER ── */}
       <div
-        className="absolute inset-0 z-[2] pointer-events-none"
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{ background: 'rgba(25, 15, 8, 0.12)' }}
+      />
+
+      <div
+        className="pointer-events-none absolute inset-0 z-[3] hidden md:block"
         style={{
-          background: 'radial-gradient(circle at 42% 32%, rgba(255,220,170,0.08), transparent 45%)',
+          background:
+            'linear-gradient(90deg, rgba(7,6,4,.92) 0%, rgba(7,6,4,.78) 28%, rgba(7,6,4,.45) 48%, rgba(7,6,4,.12) 62%, transparent 78%)',
         }}
       />
 
-      {/* ── Directional overlay — headline pops, image breathes right ── */}
       <div
-        className="absolute inset-0 z-[3] pointer-events-none"
+        className="pointer-events-none absolute inset-0 z-[3] md:hidden"
         style={{
-          background: `
-            linear-gradient(to right, rgba(9,8,7,0.82) 0%, rgba(9,8,7,0.46) 52%, rgba(9,8,7,0.08) 100%),
-            linear-gradient(to top,   rgba(9,8,7,0.90) 0%, rgba(9,8,7,0.32) 45%, transparent 72%)
-          `,
+          background:
+            'linear-gradient(180deg, rgba(7,6,4,.72) 0%, rgba(7,6,4,.48) 35%, rgba(7,6,4,.22) 65%, transparent 100%)',
         }}
       />
 
-      {/* ── Content ── */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[4]"
+        style={{
+          background:
+            'linear-gradient(0deg, rgba(5,4,3,.38) 0%, rgba(5,4,3,.1) 22%, transparent 48%)',
+        }}
+      />
+
+      <div
+        className="pointer-events-none absolute inset-0 z-[5] hidden md:block"
+        style={{
+          background:
+            'radial-gradient(ellipse 120% 80% at 18% 50%, rgba(8,7,5,.75) 0%, rgba(8,7,5,.4) 42%, transparent 65%)',
+        }}
+      />
+
+      {/* ── HERO CONTENT LAYER — structural grid below header safe zone ── */}
       <motion.div
-        className="relative z-10 w-full"
+        className="relative z-10 flex h-full flex-col"
         style={{ opacity: contentOpacity, y: contentY }}
       >
-        <div className="px-6 md:px-16 lg:px-20 pb-14 md:pb-24" style={{ maxWidth: '620px' }}>
+        {/* Header safe zone — reserves navbar territory */}
+        <div
+          className="shrink-0"
+          style={{ height: 'var(--site-header-height)' }}
+          aria-hidden="true"
+        />
 
-          {/* Tag */}
-          <motion.p
-            className="font-sans font-medium uppercase"
-            style={{ fontSize: '0.62rem', letterSpacing: '0.32em', color: '#C99643', marginBottom: '24px' }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={s(0)}
-          >
-            Certified Bridal Makeup · Kerala
-          </motion.p>
-
-          {/* Headline */}
-          <motion.h1
-            className="font-serif"
+        {/* Editorial composition area */}
+        <div
+          className="flex flex-1 flex-col md:justify-center"
+          style={{
+            paddingTop: 'var(--hero-content-gap)',
+            paddingBottom: 'clamp(3rem, 8vh, 5.5rem)',
+          }}
+        >
+          {/* Desktop */}
+          <div
+            className="relative hidden md:block"
             style={{
-              fontSize: 'clamp(40px, 5vw, 74px)',
-              lineHeight: 1.04,
-              letterSpacing: '-0.025em',
-              textShadow: '0 6px 24px rgba(0,0,0,0.28)',
+              maxWidth: '540px',
+              marginLeft: 'clamp(1.5rem, 5vw, 3.5rem)',
+              paddingLeft: 'clamp(0.5rem, 2vw, 1.5rem)',
             }}
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={s(1)}
           >
-            <span style={{ fontWeight: 700, display: 'block', color: '#FFFDF8' }}>
-              Gracefully You,
-            </span>
-            <em style={{
-              fontStyle: 'italic',
-              fontWeight: 400,
-              display: 'block',
-              color: 'rgba(255,253,248,0.68)',
-              marginTop: '0.04em',
-            }}>
-              Beautifully Bridal.
-            </em>
-          </motion.h1>
+            <div
+              className="pointer-events-none absolute -inset-x-6 -inset-y-8 rounded-2xl backdrop-blur-[2px]"
+              style={{ background: 'rgba(8, 7, 5, 0.35)' }}
+              aria-hidden="true"
+            />
 
-          {/* Gold accent line */}
-          <motion.div
-            style={{
-              width: '52px',
-              height: '1px',
-              marginTop: '28px',
-              marginBottom: '28px',
-              background: 'linear-gradient(to right, #C99643, rgba(201,150,67,0.25))',
-            }}
-            initial={{ scaleX: 0, originX: '0%' }}
-            animate={{ scaleX: 1 }}
-            transition={s(2)}
-          />
-
-          {/* Subtitle */}
-          <motion.p
-            className="font-sans"
-            style={{
-              fontWeight: 400,
-              fontSize: 'clamp(14px, 1.5vw, 15.5px)',
-              lineHeight: 1.75,
-              color: 'rgba(221,212,199,0.9)',
-              maxWidth: '380px',
-            }}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={s(3)}
-          >
-            Kerala's premier certified airbrush artist for Hindu, Christian &amp; Muslim weddings.
-          </motion.p>
-
-          {/* Buttons */}
-          <motion.div
-            className="flex flex-col sm:flex-row gap-3 mt-11"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={s(4)}
-          >
-            {/* Primary — gold */}
-            <motion.a
-              href="#contact"
-              onClick={(e) => { e.preventDefault(); scrollTo('#contact') }}
-              className="inline-flex items-center justify-center font-sans font-semibold uppercase text-white text-[0.68rem] tracking-[0.13em] rounded-full w-full sm:w-auto"
+            <div className="relative">
+            <motion.p
+              className="font-sans uppercase"
               style={{
-                height: '54px',
-                padding: '0 36px',
-                background: '#C99643',
-                border: '1px solid #C99643',
-                boxShadow: '0 4px 28px rgba(201,150,67,0.32)',
+                fontWeight: 500,
+                fontSize: '0.6875rem',
+                letterSpacing: '0.22em',
+                color: '#C79A4A',
+                marginBottom: '1rem',
               }}
-              whileHover={{
-                y: -2,
-                background: '#D7A95A',
-                borderColor: '#D7A95A',
-                boxShadow: '0 14px 44px rgba(201,150,67,0.46)',
-              }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.22 }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(1)}
             >
-              Book a Consultation
-            </motion.a>
+              {SITE_CONFIG.tagline}
+            </motion.p>
 
-            {/* Secondary — ghost */}
-            <motion.a
-              href="#portfolio"
-              onClick={(e) => { e.preventDefault(); scrollTo('#portfolio') }}
-              className="inline-flex items-center justify-center font-sans font-medium uppercase text-[0.68rem] tracking-[0.13em] rounded-full w-full sm:w-auto"
+            <motion.h1
+              className="font-serif"
               style={{
-                height: '54px',
-                padding: '0 36px',
-                color: 'rgba(221,212,199,0.82)',
-                border: '1px solid rgba(221,212,199,0.2)',
-                background: 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(8px)',
+                lineHeight: 0.95,
+                letterSpacing: '-0.04em',
+                textShadow: '0 2px 8px rgba(0,0,0,0.45), 0 12px 40px rgba(0,0,0,0.35)',
+                maxWidth: '520px',
               }}
-              whileHover={{
-                y: -2,
-                color: '#FFFDF8',
-                borderColor: 'rgba(221,212,199,0.42)',
-                background: 'rgba(255,255,255,0.09)',
-              }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.22 }}
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(2)}
             >
-              View Portfolio
-            </motion.a>
-          </motion.div>
+              <span
+                style={{
+                  display: 'block',
+                  fontWeight: 400,
+                  color: 'rgba(199,154,74,0.82)',
+                  fontSize: 'clamp(2rem, 3.2vw, 2.75rem)',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                BEAUTY,
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  fontWeight: 400,
+                  color: 'rgba(245,240,232,0.96)',
+                  fontSize: 'clamp(3rem, 5.2vw, 4.75rem)',
+                  marginTop: '-0.02em',
+                }}
+              >
+                MASTERED.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              style={{
+                fontFamily: "'Pinyon Script', cursive",
+                fontWeight: 400,
+                fontSize: 'clamp(1.75rem, 2.4vw, 2.375rem)',
+                lineHeight: 1.15,
+                color: 'rgba(245,240,232,0.82)',
+                marginTop: '0.5rem',
+                marginLeft: '0.75rem',
+                textShadow: '0 2px 16px rgba(0,0,0,0.4)',
+              }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(3)}
+            >
+              For brides. For artists.
+            </motion.p>
+
+            <motion.div
+              className="flex items-center gap-3"
+              style={{ marginTop: '1.375rem', marginBottom: '1.375rem', maxWidth: '280px' }}
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={s(2)}
+            >
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, #C79A4A, rgba(199,154,74,0.2))' }} />
+              <span style={{ fontSize: '0.625rem', color: '#C79A4A' }}>✦</span>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, #C79A4A, rgba(199,154,74,0.2))' }} />
+            </motion.div>
+
+            <motion.p
+              className="font-sans"
+              style={{
+                fontWeight: 400,
+                fontSize: '0.9375rem',
+                lineHeight: 1.7,
+                color: 'rgba(245,240,232,0.72)',
+                maxWidth: '22rem',
+              }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(4)}
+            >
+              {SITE_CONFIG.description}
+            </motion.p>
+
+            <motion.div
+              className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(5)}
+            >
+              <motion.a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollTo('#contact')
+                }}
+                className="inline-flex items-center justify-center rounded-full border border-[#C79A4A] bg-[#C79A4A] px-7 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.13em] text-white"
+                style={{
+                  height: '2.75rem',
+                  boxShadow: '0 4px 24px rgba(199,154,74,0.28)',
+                }}
+                whileHover={{
+                  y: -2,
+                  background: '#D5A85A',
+                  borderColor: '#D5A85A',
+                  boxShadow: '0 10px 36px rgba(199,154,74,0.4)',
+                }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.22 }}
+              >
+                Book Your Bridal Experience
+              </motion.a>
+
+              <motion.a
+                href="#academy"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollTo('#academy')
+                }}
+                className="inline-flex items-center gap-2 rounded-full border px-5 font-sans text-[0.65rem] font-medium uppercase tracking-[0.13em]"
+                style={{
+                  height: '2.75rem',
+                  color: 'rgba(245,240,232,0.88)',
+                  background: 'rgba(8,7,5,0.35)',
+                  borderColor: 'rgba(199,154,74,0.32)',
+                }}
+                whileHover={{
+                  color: '#FFFDF8',
+                  background: 'rgba(255,255,255,0.08)',
+                  borderColor: 'rgba(199,154,74,0.5)',
+                }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.22 }}
+              >
+                Explore the Academy
+                <span style={{ fontSize: '0.875rem', lineHeight: 1 }}>↗</span>
+              </motion.a>
+            </motion.div>
+            </div>
+          </div>
+
+          {/* Mobile — separate composition, anchored lower */}
+          <div
+            className="flex flex-1 flex-col justify-end px-6 md:hidden"
+            style={{ paddingBottom: '1.5rem' }}
+          >
+            <motion.p
+              className="font-sans uppercase"
+              style={{
+                fontWeight: 500,
+                fontSize: '0.625rem',
+                letterSpacing: '0.18em',
+                color: '#C79A4A',
+                marginBottom: '0.75rem',
+              }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(1)}
+            >
+              {SITE_CONFIG.tagline}
+            </motion.p>
+
+            <motion.h1
+              className="font-serif"
+              style={{
+                lineHeight: 0.92,
+                letterSpacing: '-0.035em',
+                textShadow: '0 4px 20px rgba(0,0,0,0.35)',
+                maxWidth: '18rem',
+              }}
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(2)}
+            >
+              <span
+                style={{
+                  display: 'block',
+                  fontWeight: 400,
+                  color: 'rgba(199,154,74,0.85)',
+                  fontSize: 'clamp(1.75rem, 7.5vw, 2.25rem)',
+                }}
+              >
+                BEAUTY,
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  fontWeight: 400,
+                  color: 'rgba(245,240,232,0.95)',
+                  fontSize: 'clamp(2.375rem, 10vw, 3rem)',
+                  marginTop: '-0.04em',
+                }}
+              >
+                MASTERED.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              style={{
+                fontFamily: "'Pinyon Script', cursive",
+                fontWeight: 400,
+                fontSize: 'clamp(1.625rem, 6vw, 2rem)',
+                lineHeight: 1.15,
+                color: 'rgba(245,240,232,0.85)',
+                marginTop: '0.375rem',
+                marginLeft: '0.375rem',
+                textShadow: '0 2px 16px rgba(0,0,0,0.5)',
+              }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(3)}
+            >
+              For brides. For artists.
+            </motion.p>
+
+            <motion.div
+              className="flex items-center gap-3"
+              style={{ marginTop: '1.125rem', marginBottom: '1.125rem', maxWidth: '220px' }}
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={s(2)}
+            >
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, #C79A4A, rgba(199,154,74,0.2))' }} />
+              <span style={{ fontSize: '0.6875rem', color: '#C79A4A' }}>✦</span>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, #C79A4A, rgba(199,154,74,0.2))' }} />
+            </motion.div>
+
+            <motion.p
+              className="font-sans"
+              style={{
+                fontWeight: 400,
+                fontSize: '0.875rem',
+                lineHeight: 1.6,
+                color: 'rgba(245,240,232,0.75)',
+                maxWidth: '18.75rem',
+              }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(4)}
+            >
+              {SITE_CONFIG.description}
+            </motion.p>
+
+            <motion.div
+              className="mt-6 flex flex-col gap-2.5"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={s(5)}
+            >
+              <motion.a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollTo('#contact')
+                }}
+                className="inline-flex h-11 w-full max-w-xs items-center justify-center rounded-full border border-[#C79A4A] bg-[#C79A4A] font-sans text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white"
+                style={{ boxShadow: '0 4px 20px rgba(199,154,74,0.28)' }}
+                whileHover={{
+                  background: '#D5A85A',
+                  borderColor: '#D5A85A',
+                }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.22 }}
+              >
+                Book Your Bridal Experience
+              </motion.a>
+
+              <motion.a
+                href="#academy"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollTo('#academy')
+                }}
+                className="inline-flex h-11 w-full max-w-xs items-center justify-center gap-2 rounded-full border font-sans text-[0.62rem] font-medium uppercase tracking-[0.12em]"
+                style={{
+                  color: 'rgba(245,240,232,0.9)',
+                  background: 'rgba(8,7,5,0.4)',
+                  borderColor: 'rgba(199,154,74,0.3)',
+                }}
+                whileHover={{
+                  color: '#FFFDF8',
+                  background: 'rgba(255,255,255,0.1)',
+                  borderColor: 'rgba(199,154,74,0.45)',
+                }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.22 }}
+              >
+                Explore the Academy
+                <span style={{ fontSize: '0.8125rem', lineHeight: 1 }}>↗</span>
+              </motion.a>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 
-      {/* Scroll hint */}
+      {/* Scroll hint — desktop only */}
       <motion.div
-        className="absolute bottom-8 right-8 md:right-14 z-10 flex flex-col items-center gap-2.5"
+        className="absolute bottom-24 right-8 z-10 hidden flex-col items-center gap-2.5 md:flex md:right-14"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
+        animate={{ opacity: 0.35 }}
         transition={{ delay: base + 0.6, duration: 1 }}
       >
         <span
           className="font-sans font-medium uppercase text-white"
-          style={{ fontSize: '0.46rem', letterSpacing: '0.22em', writingMode: 'vertical-rl' }}
+          style={{ fontSize: '0.5625rem', letterSpacing: '0.22em', writingMode: 'vertical-rl' }}
         >
           Scroll
         </span>
@@ -262,8 +497,8 @@ export function Hero() {
           style={{ width: '1px', height: '44px', background: 'rgba(255,255,255,0.12)' }}
         >
           <motion.div
-            className="absolute top-0 left-0 right-0"
-            style={{ height: '40%', background: '#C99643' }}
+            className="absolute left-0 right-0 top-0"
+            style={{ height: '40%', background: '#C79A4A' }}
             animate={{ y: ['0%', '250%'] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           />

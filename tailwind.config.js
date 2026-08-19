@@ -7,14 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#FAFAF9',
-        'bg-alt': '#F5F3EF',
-        dark: '#1C1917',
-        'dark-2': '#44403C',
+        bg: '#F7F3ED',
+        'bg-alt': '#F0EBE3',
+        champagne: '#EDE6DA',
+        dark: '#1A1410',
+        'dark-2': '#3D342C',
         gold: '#CA8A04',
         'gold-light': '#D97706',
-        text: '#0C0A09',
-        'text-muted': '#78716C',
+        text: '#1A1410',
+        'text-muted': '#6B5E54',
       },
       fontFamily: {
         serif: ['Playfair Display', 'Cormorant Garamond', 'serif'],
