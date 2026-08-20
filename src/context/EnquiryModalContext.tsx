@@ -1,8 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import type { EnquiryType } from '@/utils/whatsappEnquiry'
 
 type EnquiryModalContextValue = {
   isOpen: boolean
-  open: () => void
+  initialType: EnquiryType | null
+  open: (type?: EnquiryType) => void
   close: () => void
 }
 
@@ -10,9 +12,16 @@ const EnquiryModalContext = createContext<EnquiryModalContextValue | null>(null)
 
 export function EnquiryModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [initialType, setInitialType] = useState<EnquiryType | null>(null)
 
-  const open = useCallback(() => setIsOpen(true), [])
-  const close = useCallback(() => setIsOpen(false), [])
+  const open = useCallback((type?: EnquiryType) => {
+    setInitialType(type ?? null)
+    setIsOpen(true)
+  }, [])
+  const close = useCallback(() => {
+    setIsOpen(false)
+    setInitialType(null)
+  }, [])
 
   useEffect(() => {
     document.body.classList.toggle('no-scroll', isOpen)
@@ -28,7 +37,7 @@ export function EnquiryModalProvider({ children }: { children: ReactNode }) {
   }, [close])
 
   return (
-    <EnquiryModalContext.Provider value={{ isOpen, open, close }}>
+    <EnquiryModalContext.Provider value={{ isOpen, initialType, open, close }}>
       {children}
     </EnquiryModalContext.Provider>
   )

@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
 import { ACADEMY_PROGRAMS, LAYOUT } from '@/constants'
+import { useEnquiryModal } from '@/context/EnquiryModalContext'
 
 export function Academy() {
+  const { open: openEnquiry } = useEnquiryModal()
+
   const scrollTo = (href: string) => {
     const el = document.querySelector(href)
     if (el) {
@@ -72,7 +75,7 @@ export function Academy() {
             href="#contact"
             onClick={(e) => {
               e.preventDefault()
-              scrollTo('#contact')
+              openEnquiry('academy')
             }}
             className="mt-8 inline-flex h-11 items-center justify-center rounded-full border border-gold bg-gold px-7 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white"
             whileHover={{ y: -2, boxShadow: '0 10px 32px rgba(202,138,4,0.28)' }}
@@ -82,7 +85,7 @@ export function Academy() {
             viewport={{ once: true }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            Explore the Academy
+            Enquire About a Course
           </motion.a>
         </motion.div>
 
@@ -99,7 +102,7 @@ export function Academy() {
               >
                 <button
                   type="button"
-                  onClick={() => scrollTo('#contact')}
+                  onClick={() => openEnquiry('academy')}
                   className="group flex w-full items-start gap-4 py-6 text-left transition-colors duration-300 hover:bg-white/[0.03] md:gap-5 md:py-7"
                 >
                   <span className="shrink-0 pt-1 font-sans text-[0.6875rem] font-medium tabular-nums tracking-[0.08em] text-gold/70 transition-colors group-hover:text-gold">

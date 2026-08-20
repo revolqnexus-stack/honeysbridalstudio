@@ -5,7 +5,7 @@ import { WhatsAppEnquiryForm } from '@/components/ui/WhatsAppEnquiryForm'
 const ease = [0.22, 1, 0.36, 1] as const
 
 export function EnquiryModal() {
-  const { isOpen, close } = useEnquiryModal()
+  const { isOpen, close, initialType } = useEnquiryModal()
 
   return (
     <AnimatePresence>
@@ -34,9 +34,9 @@ export function EnquiryModal() {
             transition={{ duration: 0.38, ease }}
           >
             <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-white/20" aria-hidden="true" />
-            <ModalChrome onClose={close} />
+            <ModalChrome onClose={close} initialType={initialType} />
             <div className="overflow-y-auto overscroll-contain px-5 pb-8 pt-2" style={{ maxHeight: 'calc(min(92dvh, 680px) - 4.5rem)' }}>
-              <WhatsAppEnquiryForm key="mobile-enquiry" variant="modal" onSuccess={close} />
+              <WhatsAppEnquiryForm key={`mobile-${initialType ?? 'default'}`} variant="modal" initialType={initialType} onSuccess={close} />
             </div>
           </motion.div>
 
@@ -60,9 +60,9 @@ export function EnquiryModal() {
               transition={{ duration: 0.32, ease }}
               onClick={(e) => e.stopPropagation()}
             >
-              <ModalChrome onClose={close} />
+              <ModalChrome onClose={close} initialType={initialType} />
               <div className="overflow-y-auto overscroll-contain px-6 pb-6 pt-2">
-                <WhatsAppEnquiryForm key="desktop-enquiry" variant="modal" onSuccess={close} />
+                <WhatsAppEnquiryForm key={`desktop-${initialType ?? 'default'}`} variant="modal" initialType={initialType} onSuccess={close} />
               </div>
             </motion.div>
           </motion.div>
@@ -72,14 +72,22 @@ export function EnquiryModal() {
   )
 }
 
-function ModalChrome({ onClose }: { onClose: () => void }) {
+function ModalChrome({ onClose, initialType }: { onClose: () => void; initialType?: string | null }) {
+  const title = initialType === 'academy'
+    ? 'Academy enquiry'
+    : initialType === 'bridal'
+      ? 'Bridal experience enquiry'
+      : initialType === 'beauty'
+        ? 'Beauty services enquiry'
+        : 'Plan your enquiry'
+
   return (
     <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4 md:px-6">
       <div>
         <p className="font-sans text-[0.625rem] font-medium uppercase tracking-[0.22em] text-gold">
           Honey&apos;s Bridal Studio
         </p>
-        <p className="font-serif text-xl text-white">Plan your enquiry</p>
+        <p className="font-serif text-xl text-white">{title}</p>
       </div>
       <button
         type="button"

@@ -267,7 +267,7 @@ export function Hero() {
             >
               <motion.button
                 type="button"
-                onClick={openEnquiry}
+                onClick={() => openEnquiry('bridal')}
                 className="inline-flex items-center justify-center rounded-full border border-[#C79A4A] bg-[#C79A4A] px-7 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.13em] text-white"
                 style={{
                   height: '2.75rem',
@@ -423,7 +423,7 @@ export function Hero() {
             >
               <motion.button
                 type="button"
-                onClick={openEnquiry}
+                onClick={() => openEnquiry('bridal')}
                 className="inline-flex h-11 w-full max-w-xs items-center justify-center rounded-full border border-[#C79A4A] bg-[#C79A4A] font-sans text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white"
                 style={{ boxShadow: '0 4px 20px rgba(199,154,74,0.28)' }}
                 whileTap={{ scale: 0.97 }}
