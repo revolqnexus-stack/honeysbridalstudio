@@ -218,7 +218,7 @@ export function Hero() {
                 fontWeight: 400,
                 fontSize: 'clamp(1.75rem, 2.4vw, 2.375rem)',
                 lineHeight: 1.15,
-                color: 'rgba(245,240,232,0.82)',
+                color: '#ffffff',
                 marginTop: '0.5rem',
                 marginLeft: '0.75rem',
                 textShadow: '0 2px 16px rgba(0,0,0,0.4)',
@@ -227,7 +227,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={s(3)}
             >
-              For brides. For artists.
+              {SITE_CONFIG.motto}
             </motion.p>
 
             <motion.div
@@ -375,7 +375,7 @@ export function Hero() {
                 fontWeight: 400,
                 fontSize: 'clamp(1.625rem, 6vw, 2rem)',
                 lineHeight: 1.15,
-                color: 'rgba(245,240,232,0.85)',
+                color: '#ffffff',
                 marginTop: '0.375rem',
                 marginLeft: '0.375rem',
                 textShadow: '0 2px 16px rgba(0,0,0,0.5)',
@@ -384,7 +384,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={s(3)}
             >
-              For brides. For artists.
+              {SITE_CONFIG.motto}
             </motion.p>
 
             <motion.div

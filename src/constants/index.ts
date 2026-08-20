@@ -6,6 +6,7 @@ export const LAYOUT = {
 export const SITE_CONFIG = {
   name: "Honey's",
   tagline: "Bridal Artistry · Kerala",
+  motto: "Gracefully You, Beautifully Bridal.",
   description: "From signature bridal transformations to professional makeup education, Honey's brings beauty, artistry and technique together under one roof.",
   phone: "+916282551317",
   whatsapp: "https://wa.me/916282551317",

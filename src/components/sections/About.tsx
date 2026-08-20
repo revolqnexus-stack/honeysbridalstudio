@@ -29,6 +29,15 @@ export function About() {
               <p className="mb-3 font-sans text-[0.6875rem] font-medium uppercase tracking-[0.28em] text-gold">Our Story</p>
             </FadeUp>
 
+            <FadeUp delay={0.05}>
+              <p
+                className="mb-3 font-serif italic text-dark/70"
+                style={{ fontFamily: "'Pinyon Script', cursive", fontSize: 'clamp(1.5rem, 2.8vw, 2rem)', lineHeight: 1.2 }}
+              >
+                "Gracefully You, Beautifully Bridal."
+              </p>
+            </FadeUp>
+
             <FadeUp delay={0.1}>
               <h2 className="font-serif text-4xl font-normal leading-[1.05] text-dark md:text-5xl lg:text-[3.5rem] mb-5">
                 The Artist<br /><em className="text-dark-2">Behind the Magic</em>
