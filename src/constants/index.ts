@@ -7,10 +7,11 @@ export const SITE_CONFIG = {
   name: "Honey's",
   tagline: "Bridal Artistry · Kerala",
   description: "From signature bridal transformations to professional makeup education, Honey's brings beauty, artistry and technique together under one roof.",
-  phone: "+916282089746",
-  whatsapp: "https://wa.me/916282089746",
+  phone: "+916282551317",
+  whatsapp: "https://wa.me/916282551317",
   instagram: "https://www.instagram.com/vineetha_honeys_",
   location: "Rajakumari, Idukki District, Kerala, India",
+  googleMaps: "https://maps.app.goo.gl/GSVDcUn5dzfFS4mc7",
 } as const
 
 export const SERVICES = [
@@ -93,8 +94,8 @@ export const TESTIMONIALS = [
 /** Studio interior shots — files live in public/photos/studio/ */
 export const STUDIO_INTERIOR_IMAGES = [
   {
-    src: '/photos/studio/interior.jpeg',
-    fallback: '/photos/studio/interior1.jpeg',
+    src: '/photos/studio/interior6.png',
+    fallback: '/photos/studio/interior.jpeg',
     alt: "Honey's studio interior — bridal preparation space",
     caption: 'Bridal Suite',
     eyebrow: 'Rajakumari · Idukki',
@@ -102,8 +103,8 @@ export const STUDIO_INTERIOR_IMAGES = [
     subtitle: 'Warm light, considered details, and the calm before your walk down the aisle.',
   },
   {
-    src: '/photos/studio/interior1.jpeg',
-    fallback: '/photos/studio/interior.jpeg',
+    src: '/photos/studio/interior7.png',
+    fallback: '/photos/studio/interior1.jpeg',
     alt: "Honey's beauty house interior",
     caption: 'Beauty House',
     eyebrow: 'Honey\'s Beauty House',
@@ -135,22 +136,34 @@ export const STUDIO_GALLERY_STRIP = [
     caption: 'The Light',
   },
   {
+    src: '/photos/studio/interior6.png',
+    fallback: '/photos/studio/interior3.jpeg',
+    alt: 'Studio styling area',
+    caption: 'The Studio',
+  },
+  {
     src: '/photos/studio/interior3.jpeg',
     fallback: '/photos/studio/interior4.jpeg',
     alt: 'Studio styling corner',
     caption: 'The Detail',
   },
   {
+    src: '/photos/studio/interior7.png',
+    fallback: '/photos/studio/interior4.jpeg',
+    alt: 'Studio preparation area',
+    caption: 'The Space',
+  },
+  {
     src: '/photos/studio/interior4.jpeg',
     fallback: '/photos/studio/interior5.jpeg',
     alt: 'Studio preparation area',
-    caption: 'The Space',
+    caption: 'The Atelier',
   },
   {
     src: '/photos/studio/interior5.jpeg',
     fallback: '/photos/studio/interior4.jpeg',
     alt: 'Studio finishing touches',
-    caption: 'The Atelier',
+    caption: 'The Finishing',
   },
 ] as const
 
@@ -180,9 +193,11 @@ export const NAV_LINKS = [
 
 export const MARQUEE_ITEMS = [
   "Bridal Artistry",
+  "Ladies Only",
   "Professional Makeup Education",
   "Bridal Makeup",
   "Hairstyle & Saree Drape",
+  "Ladies Only Salon",
   "Haircuts & Styling",
   "Hair Treatments",
   "Skin Treatments",

@@ -45,7 +45,7 @@ export function Contact() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Ready to look and feel your most beautiful on your wedding day? Get in touch to check availability and book a bridal consultation.
+            Ready to look and feel your most beautiful on your wedding day? Get in touch to check availability and book a bridal consultation. Honey's is a ladies-only studio — a private, comfortable space created entirely for women.
           </motion.p>
 
           {/* Contact Details */}
@@ -65,9 +65,18 @@ export function Contact() {
                 <strong className="block text-xs tracking-[0.12em] uppercase text-white/40 mb-1">
                   Studio Location
                 </strong>
-                <p className="text-sm text-white/70 leading-relaxed">
+                <p className="text-sm text-white/70 leading-relaxed mb-1">
                   Rajakumari, Idukki District<br />Kerala, India
                 </p>
+                <a
+                  href={SITE_CONFIG.googleMaps}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-gold/70 hover:text-gold transition-colors"
+                >
+                  Open in Maps
+                  <span aria-hidden="true">↗</span>
+                </a>
               </div>
             </div>
 
@@ -97,7 +106,7 @@ export function Contact() {
                   href={`tel:${SITE_CONFIG.phone}`}
                   className="text-sm text-white/70 hover:text-gold transition-colors"
                 >
-                  +91 6282 089 746
+                  +91 6282 551 317
                 </a>
               </div>
             </div>

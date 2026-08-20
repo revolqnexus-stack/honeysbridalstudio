@@ -54,6 +54,7 @@ export function About() {
                 { num: '200+', label: 'Happy Brides' },
                 { num: '5★', label: 'Client Rating' },
                 { num: 'Kerala', label: 'Wide Service' },
+                { num: '♀', label: 'Ladies Only' },
               ].map((stat) => (
                 <StaggerItem key={stat.label}>
                   <div className="flex flex-col gap-1">

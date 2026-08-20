@@ -197,7 +197,7 @@ export function Navbar() {
             className={cn('relative font-sans font-light uppercase transition-all duration-500 group-hover:text-gold/70', headerLight ? 'text-white/50' : 'text-dark/55')}
             style={{ fontSize: '0.46rem', letterSpacing: '0.38em' }}
           >
-            BRIDAL ARTISTRY
+            BRIDAL ARTISTRY · LADIES ONLY
           </span>
         </motion.a>
 
@@ -263,8 +263,7 @@ export function Navbar() {
           <motion.button
             type="button"
             onClick={() => openEnquiry()}
-            className={cn(
-              'relative font-sans font-medium uppercase rounded-full transition-all duration-400 overflow-hidden',
+            className={cn(              'relative font-sans font-medium uppercase rounded-full transition-all duration-400 overflow-hidden',
               lightText ? 'text-white' : 'text-dark'
             )}
             style={{

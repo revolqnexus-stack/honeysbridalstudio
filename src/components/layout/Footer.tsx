@@ -15,7 +15,7 @@ export function Footer() {
                 Honey's
               </span>
               <span className="font-sans text-[0.55rem] tracking-[0.3em] uppercase text-white/40">
-                Bridal Artistry · Kerala
+                Bridal Artistry · Ladies Only · Kerala
               </span>
             </div>
             <p className="text-sm text-white/40 leading-relaxed max-w-xs mb-6">
