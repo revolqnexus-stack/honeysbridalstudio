@@ -1,19 +1,9 @@
 import { motion } from 'framer-motion'
-import { ACADEMY_PROGRAMS, LAYOUT } from '@/constants'
+import { ACADEMY_PROGRAMS } from '@/constants'
 import { useEnquiryModal } from '@/context/EnquiryModalContext'
 
 export function Academy() {
   const { open: openEnquiry } = useEnquiryModal()
-
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href)
-    if (el) {
-      window.scrollTo({
-        top: el.getBoundingClientRect().top + window.scrollY - LAYOUT.headerHeightPx,
-        behavior: 'smooth',
-      })
-    }
-  }
 
   return (
     <section

@@ -12,7 +12,7 @@ export function EnquiryTrigger({ className, children }: EnquiryTriggerProps) {
   return (
     <button
       type="button"
-      onClick={open}
+      onClick={() => open()}
       className={cn(
         'inline-flex items-center gap-2 font-sans text-[0.65rem] font-medium uppercase tracking-[0.14em] text-white/55 transition hover:text-gold',
         className,
