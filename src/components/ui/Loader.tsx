@@ -12,6 +12,10 @@ export function Loader() {
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
     
+    // Lock body overflow to prevent any scrolling during load
+    document.body.style.overflow = 'hidden'
+    document.body.style.height = '100vh'
+    
     // Disable browser scroll restoration to prevent auto-scroll to previous position
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual'
@@ -39,6 +43,10 @@ export function Loader() {
       // Use multiple RAF to ensure scroll position sticks after all browser rendering
       requestAnimationFrame(() => {
         window.scrollTo(0, 0)
+        
+        // Unlock body and mark loader as complete
+        document.body.style.overflow = ''
+        document.body.style.height = ''
         document.body.classList.add('loader-complete')
         
         requestAnimationFrame(() => {
@@ -51,6 +59,8 @@ export function Loader() {
       clearInterval(scrollLock)
       clearTimeout(t1)
       clearTimeout(t2)
+      document.body.style.overflow = ''
+      document.body.style.height = ''
     }
   }, [])
 

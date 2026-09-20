@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from 'framer-motion'
 import { LAYOUT, SITE_CONFIG } from '@/constants'
 import { useEnquiryModal } from '@/context/EnquiryModalContext'
@@ -16,28 +16,6 @@ export function Hero() {
   const videoScale = useSpring(videoScaleMotion, { stiffness: 6, damping: 40 })
 
   const [videoReady, setVideoReady] = useState(false)
-  const [loaderComplete, setLoaderComplete] = useState(false)
-
-  // Wait for loader to complete before starting animations
-  useEffect(() => {
-    const checkLoader = setInterval(() => {
-      if (document.body.classList.contains('loader-complete')) {
-        setLoaderComplete(true)
-        clearInterval(checkLoader)
-      }
-    }, 50)
-
-    // Fallback timeout in case class isn't added
-    const fallback = setTimeout(() => {
-      setLoaderComplete(true)
-      clearInterval(checkLoader)
-    }, 3500)
-
-    return () => {
-      clearInterval(checkLoader)
-      clearTimeout(fallback)
-    }
-  }, [])
 
   const startZoom = () => {
     animate(videoScaleMotion, 1.04, {
@@ -69,7 +47,8 @@ export function Hero() {
 
   const { open: openEnquiry } = useEnquiryModal()
 
-  const base = loaderComplete ? 2.5 : 5.5 // Delay animations if loader is still active
+  // Start animations immediately - main content visibility is controlled at body level
+  const base = 2.5
   const s = (i: number) => ({ duration: 0.8, delay: base + i * 0.1, ease: [0.22, 1, 0.36, 1] as const })
 
   return (
@@ -158,8 +137,8 @@ export function Hero() {
             <div className="relative max-w-xl lg:max-w-[540px]">
               <motion.p
                 className="font-sans uppercase"
-                style={{ fontWeight: 500, fontSize: '0.6875rem', letterSpacing: '0.22em', color: '#C79A4A', marginBottom: '1rem', visibility: loaderComplete ? 'visible' : 'hidden' }}
-                initial={{ opacity: loaderComplete ? 0 : 1, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(1)}
+                style={{ fontWeight: 500, fontSize: '0.6875rem', letterSpacing: '0.22em', color: '#C79A4A', marginBottom: '1rem' }}
+                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(1)}
               >
                 {SITE_CONFIG.tagline}
               </motion.p>
@@ -170,9 +149,8 @@ export function Hero() {
                   lineHeight: 0.95, letterSpacing: '-0.04em',
                   textShadow: '0 1px 2px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.45)',
                   maxWidth: '520px',
-                  visibility: loaderComplete ? 'visible' : 'hidden'
                 }}
-                initial={{ opacity: loaderComplete ? 0 : 1, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={s(2)}
+                initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={s(2)}
               >
                 <span style={{ display: 'block', fontWeight: 400, color: 'rgba(199,154,74,0.82)', fontSize: 'clamp(2rem, 3.2vw, 2.75rem)', letterSpacing: '-0.02em' }}>
                   BEAUTY,
@@ -188,17 +166,16 @@ export function Hero() {
                   fontSize: 'clamp(1.75rem, 2.4vw, 2.375rem)', lineHeight: 1.15,
                   color: '#ffffff', marginTop: '0.5rem', marginLeft: '0.75rem',
                   textShadow: '0 2px 16px rgba(0,0,0,0.4)',
-                  visibility: loaderComplete ? 'visible' : 'hidden'
                 }}
-                initial={{ opacity: loaderComplete ? 0 : 1, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(3)}
+                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(3)}
               >
                 {SITE_CONFIG.motto}
               </motion.p>
 
               <motion.div
                 className="flex items-center gap-3"
-                style={{ marginTop: '1.375rem', marginBottom: '1.375rem', maxWidth: '280px', visibility: loaderComplete ? 'visible' : 'hidden' }}
-                initial={{ opacity: loaderComplete ? 0 : 1, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1 }} transition={s(2)}
+                style={{ marginTop: '1.375rem', marginBottom: '1.375rem', maxWidth: '280px' }}
+                initial={{ opacity: 0, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1 }} transition={s(2)}
               >
                 <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, #C79A4A, rgba(199,154,74,0.2))' }} />
                 <span style={{ fontSize: '0.625rem', color: '#C79A4A' }}>✦</span>
@@ -207,16 +184,15 @@ export function Hero() {
 
               <motion.p
                 className="font-sans"
-                style={{ fontWeight: 400, fontSize: '0.9375rem', lineHeight: 1.7, color: 'rgba(245,240,232,0.78)', maxWidth: '22rem', textShadow: '0 1px 3px rgba(0,0,0,0.45)', visibility: loaderComplete ? 'visible' : 'hidden' }}
-                initial={{ opacity: loaderComplete ? 0 : 1, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(4)}
+                style={{ fontWeight: 400, fontSize: '0.9375rem', lineHeight: 1.7, color: 'rgba(245,240,232,0.78)', maxWidth: '22rem', textShadow: '0 1px 3px rgba(0,0,0,0.45)' }}
+                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(4)}
               >
                 {SITE_CONFIG.description}
               </motion.p>
 
               <motion.div
                 className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3"
-                style={{ visibility: loaderComplete ? 'visible' : 'hidden' }}
-                initial={{ opacity: loaderComplete ? 0 : 1, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(5)}
+                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={s(5)}
               >
                 <motion.button
                   type="button"
@@ -256,8 +232,8 @@ export function Hero() {
           {/* Eyebrow */}
           <motion.p
             className="font-sans uppercase"
-            style={{ fontWeight: 500, fontSize: '0.6rem', letterSpacing: '0.2em', color: '#C79A4A', marginBottom: '0.625rem', visibility: loaderComplete ? 'visible' : 'hidden' }}
-            initial={{ opacity: loaderComplete ? 0 : 1, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(1)}
+            style={{ fontWeight: 500, fontSize: '0.6rem', letterSpacing: '0.2em', color: '#C79A4A', marginBottom: '0.625rem' }}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(1)}
           >
             {SITE_CONFIG.tagline}
           </motion.p>
@@ -268,9 +244,8 @@ export function Hero() {
             style={{
               lineHeight: 0.9, letterSpacing: '-0.03em',
               textShadow: '0 2px 12px rgba(0,0,0,0.5)',
-              visibility: loaderComplete ? 'visible' : 'hidden'
             }}
-            initial={{ opacity: loaderComplete ? 0 : 1, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={s(2)}
+            initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={s(2)}
           >
             <span style={{ display: 'block', fontWeight: 400, color: 'rgba(199,154,74,0.88)', fontSize: 'clamp(1.6rem, 8vw, 2.2rem)' }}>
               BEAUTY,
@@ -288,9 +263,8 @@ export function Hero() {
               color: '#ffffff', marginTop: '0.4rem', marginLeft: '0.25rem',
               textShadow: '0 2px 12px rgba(0,0,0,0.55)',
               maxWidth: '18rem',
-              visibility: loaderComplete ? 'visible' : 'hidden'
             }}
-            initial={{ opacity: loaderComplete ? 0 : 1, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(3)}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(3)}
           >
             {SITE_CONFIG.motto}
           </motion.p>
@@ -298,8 +272,8 @@ export function Hero() {
           {/* Divider */}
           <motion.div
             className="flex items-center gap-2.5"
-            style={{ marginTop: '1rem', marginBottom: '1rem', maxWidth: '180px', visibility: loaderComplete ? 'visible' : 'hidden' }}
-            initial={{ opacity: loaderComplete ? 0 : 1, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1 }} transition={s(2)}
+            style={{ marginTop: '1rem', marginBottom: '1rem', maxWidth: '180px' }}
+            initial={{ opacity: 0, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1 }} transition={s(2)}
           >
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, #C79A4A, rgba(199,154,74,0.2))' }} />
             <span style={{ fontSize: '0.5rem', color: '#C79A4A' }}>✦</span>
@@ -313,9 +287,8 @@ export function Hero() {
               fontWeight: 400, fontSize: '0.8125rem', lineHeight: 1.65,
               color: 'rgba(245,240,232,0.78)', maxWidth: '22rem',
               textShadow: '0 1px 4px rgba(0,0,0,0.5)',
-              visibility: loaderComplete ? 'visible' : 'hidden'
             }}
-            initial={{ opacity: loaderComplete ? 0 : 1, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(4)}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(4)}
           >
             {SITE_CONFIG.description}
           </motion.p>
@@ -323,8 +296,7 @@ export function Hero() {
           {/* CTAs — full width, stacked */}
           <motion.div
             className="mt-5 flex flex-col gap-3"
-            style={{ visibility: loaderComplete ? 'visible' : 'hidden' }}
-            initial={{ opacity: loaderComplete ? 0 : 1, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(5)}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={s(5)}
           >
             <motion.button
               type="button"
@@ -361,8 +333,7 @@ export function Hero() {
       {/* Scroll hint — desktop only */}
       <motion.div
         className="absolute bottom-24 right-14 z-10 hidden flex-col items-center gap-2.5 md:flex"
-        style={{ visibility: loaderComplete ? 'visible' : 'hidden' }}
-        initial={{ opacity: loaderComplete ? 0 : 0.35 }}
+        initial={{ opacity: 0 }}
         animate={{ opacity: 0.35 }}
         transition={{ delay: base + 0.6, duration: 1 }}
       >
