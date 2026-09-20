@@ -30,6 +30,14 @@
     @apply bg-bg text-text font-sans antialiased;
     font-weight: 300;
     line-height: 1.7;
+    /* Prevent FOUC: hide overflow until loader completes */
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  body.loader-complete {
+    overflow: visible;
+    height: auto;
   }
 
   body.no-scroll {

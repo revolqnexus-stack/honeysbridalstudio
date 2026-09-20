@@ -1,0 +1,16 @@
+# Honey's Bridal Studio - Robots.txt
+# https://honeysbridalacademy.com
+
+User-agent: *
+Allow: /
+
+# Disallow unnecessary files
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /*.json$
+
+# Sitemap Location
+Sitemap: https://honeysbridalacademy.com/sitemap.xml
+
+# Crawl Delay (optional, be respectful to crawlers)
+Crawl-delay: 1

@@ -7,44 +7,64 @@ export function Loader() {
   const [phase, setPhase] = useState<'in' | 'out' | 'done'>('in')
 
   useEffect(() => {
-    // Immediately force scroll to top on mount
+    // Force immediate scroll to top on mount - multiple approaches for reliability
     window.scrollTo(0, 0)
-    document.body.classList.add('no-scroll')
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
     
-    // Disable browser scroll restoration
+    // Disable browser scroll restoration to prevent auto-scroll to previous position
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual'
     }
     
-    // After letters + bar finish, slide up and exit
-    const t1 = setTimeout(() => setPhase('out'), 2200)
-    const t2 = setTimeout(() => {
-      // Force scroll to top BEFORE removing loader and re-enabling scroll
+    // Keep forcing scroll to top during initial render phase
+    const scrollLock = setInterval(() => {
       window.scrollTo(0, 0)
-      setPhase('done')
-      document.body.classList.remove('no-scroll')
+    }, 50)
+    
+    // After letters + bar finish, slide up and exit
+    const t1 = setTimeout(() => {
+      clearInterval(scrollLock)
+      setPhase('out')
+    }, 2200)
+    
+    const t2 = setTimeout(() => {
+      // Final scroll enforcement before allowing page interaction
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
       
-      // One more forced scroll after a frame to catch any browser restoration
+      setPhase('done')
+      
+      // Use multiple RAF to ensure scroll position sticks after all browser rendering
       requestAnimationFrame(() => {
         window.scrollTo(0, 0)
+        document.body.classList.add('loader-complete')
+        
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0)
+        })
       })
-    }, 3000)
+    }, 3100) // Slightly longer to ensure slide-up animation completes
     
     return () => {
+      clearInterval(scrollLock)
       clearTimeout(t1)
       clearTimeout(t2)
-      document.body.classList.remove('no-scroll')
     }
   }, [])
 
   if (phase === 'done') return null
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <motion.div
+        key="loader"
         className="fixed inset-0 z-[9999] bg-dark flex flex-col items-center justify-center"
         style={{ gap: 'clamp(1rem, 4vh, 2rem)' }}
+        initial={{ y: 0 }}
         animate={phase === 'out' ? { y: '-100%' } : { y: 0 }}
+        exit={{ y: '-100%' }}
         transition={
           phase === 'out'
             ? { duration: 0.8, ease: [0.76, 0, 0.24, 1] }

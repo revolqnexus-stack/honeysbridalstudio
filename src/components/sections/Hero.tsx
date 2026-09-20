@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from 'framer-motion'
 import { LAYOUT, SITE_CONFIG } from '@/constants'
 import { useEnquiryModal } from '@/context/EnquiryModalContext'
@@ -16,6 +16,28 @@ export function Hero() {
   const videoScale = useSpring(videoScaleMotion, { stiffness: 6, damping: 40 })
 
   const [videoReady, setVideoReady] = useState(false)
+  const [loaderComplete, setLoaderComplete] = useState(false)
+
+  // Wait for loader to complete before starting animations
+  useEffect(() => {
+    const checkLoader = setInterval(() => {
+      if (document.body.classList.contains('loader-complete')) {
+        setLoaderComplete(true)
+        clearInterval(checkLoader)
+      }
+    }, 50)
+
+    // Fallback timeout in case class isn't added
+    const fallback = setTimeout(() => {
+      setLoaderComplete(true)
+      clearInterval(checkLoader)
+    }, 3500)
+
+    return () => {
+      clearInterval(checkLoader)
+      clearTimeout(fallback)
+    }
+  }, [])
 
   const startZoom = () => {
     animate(videoScaleMotion, 1.04, {
@@ -47,7 +69,7 @@ export function Hero() {
 
   const { open: openEnquiry } = useEnquiryModal()
 
-  const base = 2.5
+  const base = loaderComplete ? 2.5 : 5.5 // Delay animations if loader is still active
   const s = (i: number) => ({ duration: 0.8, delay: base + i * 0.1, ease: [0.22, 1, 0.36, 1] as const })
 
   return (
