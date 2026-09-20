@@ -52,6 +52,27 @@
   section[id] {
     scroll-margin-top: var(--site-header-height);
   }
+
+  /* Font display swap for better performance */
+  @font-face {
+    font-family: 'Playfair Display';
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Cormorant Garamond';
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Pinyon Script';
+    font-display: swap;
+  }
 }
 
 @layer utilities {

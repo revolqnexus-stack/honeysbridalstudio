@@ -66,6 +66,8 @@ export function HoneysWorld() {
                 src="/what we offer pic/bridal makeup,hairstyle and saree drape.jpg.jpeg"
                 alt="Bridal Studio"
                 className="h-full w-full object-cover"
+                width={800}
+                height={1000}
                 loading="lazy"
                 whileHover={{ scale: 1.06 }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -108,6 +110,8 @@ export function HoneysWorld() {
                 src="/what we offer pic/professional makeup artist.jpg.jpeg"
                 alt="Academy"
                 className="h-full w-full object-cover"
+                width={800}
+                height={1000}
                 loading="lazy"
                 whileHover={{ scale: 1.06 }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -150,6 +154,8 @@ export function HoneysWorld() {
                 src="/what we offer pic/skin treatments.jpg.jpeg"
                 alt="Beauty Studio"
                 className="h-full w-full object-cover"
+                width={800}
+                height={1000}
                 loading="lazy"
                 whileHover={{ scale: 1.06 }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

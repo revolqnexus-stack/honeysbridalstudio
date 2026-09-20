@@ -65,6 +65,8 @@ export function Hero() {
         alt=""
         className="absolute inset-0 z-[1] h-full w-full object-cover"
         style={{ objectPosition: '60% center' }}
+        width={1920}
+        height={1080}
         fetchPriority="high"
         animate={{ opacity: videoReady ? 0 : 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -76,7 +78,10 @@ export function Hero() {
         className="absolute inset-0 z-[0] hidden h-full w-full object-cover md:block"
         style={{ objectPosition: '74% 20%', scale: videoScale }}
         src="/photos/hero video pc.mp4"
-        autoPlay muted loop playsInline preload="auto"
+        poster="/photos/hero.webp"
+        autoPlay muted loop playsInline preload="metadata"
+        width={1920}
+        height={1080}
         initial={{ opacity: 0 }}
         animate={{ opacity: videoReady ? 1 : 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -89,7 +94,10 @@ export function Hero() {
         className="absolute inset-0 z-[0] h-full w-full object-cover md:hidden"
         style={{ objectPosition: '60% 15%', scale: videoScale }}
         src="/photos/hero video mobile.mp4"
-        autoPlay muted loop playsInline preload="auto"
+        poster="/photos/hero.webp"
+        autoPlay muted loop playsInline preload="metadata"
+        width={720}
+        height={1280}
         initial={{ opacity: 0 }}
         animate={{ opacity: videoReady ? 1 : 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
