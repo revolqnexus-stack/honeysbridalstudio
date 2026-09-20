@@ -8,16 +8,27 @@ export function Loader() {
 
   useEffect(() => {
     document.body.classList.add('no-scroll')
+    
+    // Disable browser scroll restoration
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    
     // After letters + bar finish, slide up and exit
     const t1 = setTimeout(() => setPhase('out'), 2200)
     const t2 = setTimeout(() => {
       setPhase('done')
       document.body.classList.remove('no-scroll')
-      if (!window.location.hash) {
-        window.scrollTo(0, 0)
-      }
+      
+      // Force scroll to top regardless of hash or history
+      window.scrollTo(0, 0)
     }, 3000)
-    return () => { clearTimeout(t1); clearTimeout(t2); document.body.classList.remove('no-scroll') }
+    
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      document.body.classList.remove('no-scroll')
+    }
   }, [])
 
   if (phase === 'done') return null
