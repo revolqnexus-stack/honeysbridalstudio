@@ -10,28 +10,29 @@ export default defineConfig({
     },
   },
   build: {
-    // Enable code splitting
+    // Enable code splitting for better caching
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-lenis': ['lenis'],
+        manualChunks(id) {
+          // Split vendor libraries into separate chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor-react'
+            }
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion'
+            }
+            if (id.includes('lenis')) {
+              return 'vendor-lenis'
+            }
+          }
         },
       },
     },
-    // Reduce chunk size warnings threshold
+    // Optimize chunk size
     chunkSizeWarningLimit: 1000,
-    // Minify with terser for better compression
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.logs in production
-        drop_debugger: true,
-      },
-    },
   },
-  // Optimize dependencies
+  // Pre-bundle dependencies for faster dev server
   optimizeDeps: {
     include: ['react', 'react-dom', 'framer-motion', 'lenis'],
   },
