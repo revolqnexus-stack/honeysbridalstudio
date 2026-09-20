@@ -3,6 +3,14 @@ import Lenis from 'lenis'
 
 export function useLenis() {
   useEffect(() => {
+    // Skip smooth scroll on mobile for better performance
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+    
+    if (isMobile) {
+      // On mobile, use native scroll (faster)
+      return
+    }
+    
     // Delay Lenis initialization until after loader completes
     // This prevents smooth scroll from interfering with scroll lock during load
     const initTimer = setTimeout(() => {

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } from 'framer-motion'
 import { LAYOUT, SITE_CONFIG } from '@/constants'
 import { useEnquiryModal } from '@/context/EnquiryModalContext'
@@ -16,6 +16,22 @@ export function Hero() {
   const videoScale = useSpring(videoScaleMotion, { stiffness: 6, damping: 40 })
 
   const [videoReady, setVideoReady] = useState(false)
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+
+  // Check network conditions for mobile video loading
+  useEffect(() => {
+    // Check if user prefers reduced data usage
+    const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection
+    
+    if (connection) {
+      // Load video only on fast connections (4g, wifi) or if saveData is off
+      const isFastConnection = connection.effectiveType === '4g' || !connection.saveData
+      setShouldLoadVideo(isFastConnection)
+    } else {
+      // If connection API not available, load video by default
+      setShouldLoadVideo(true)
+    }
+  }, [])
 
   const startZoom = () => {
     animate(videoScaleMotion, 1.04, {
@@ -47,9 +63,14 @@ export function Hero() {
 
   const { open: openEnquiry } = useEnquiryModal()
 
-  // Start animations immediately - main content visibility is controlled at body level
-  const base = 2.5
-  const s = (i: number) => ({ duration: 0.8, delay: base + i * 0.1, ease: [0.22, 1, 0.36, 1] as const })
+  // Faster animations on mobile for better performance
+  const isMobile = typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
+  const base = isMobile ? 2.0 : 2.5 // Faster on mobile
+  const s = (i: number) => ({ 
+    duration: isMobile ? 0.6 : 0.8, // Faster animations on mobile
+    delay: base + i * (isMobile ? 0.08 : 0.1), // Tighter timing on mobile
+    ease: [0.22, 1, 0.36, 1] as const 
+  })
 
   return (
     <section
@@ -68,41 +89,45 @@ export function Hero() {
         width={1920}
         height={1080}
         fetchPriority="high"
-        animate={{ opacity: videoReady ? 0 : 1 }}
+        animate={{ opacity: (videoReady && shouldLoadVideo) ? 0 : 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       />
 
       {/* Desktop video */}
-      <motion.video
-        ref={videoDesktopRef}
-        className="absolute inset-0 z-[0] hidden h-full w-full object-cover md:block"
-        style={{ objectPosition: '74% 20%', scale: videoScale }}
-        src="/photos/hero video pc.mp4"
-        poster="/photos/hero.webp"
-        autoPlay muted loop playsInline preload="metadata"
-        width={1920}
-        height={1080}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: videoReady ? 1 : 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        onCanPlayThrough={handleVideoReady}
-      />
+      {shouldLoadVideo && (
+        <motion.video
+          ref={videoDesktopRef}
+          className="absolute inset-0 z-[0] hidden h-full w-full object-cover md:block"
+          style={{ objectPosition: '74% 20%', scale: videoScale }}
+          src="/photos/hero video pc.mp4"
+          poster="/photos/hero.webp"
+          autoPlay muted loop playsInline preload="metadata"
+          width={1920}
+          height={1080}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: videoReady ? 1 : 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          onCanPlayThrough={handleVideoReady}
+        />
+      )}
 
-      {/* Mobile video */}
-      <motion.video
-        ref={videoMobileRef}
-        className="absolute inset-0 z-[0] h-full w-full object-cover md:hidden"
-        style={{ objectPosition: '60% 15%', scale: videoScale }}
-        src="/photos/hero video mobile.mp4"
-        poster="/photos/hero.webp"
-        autoPlay muted loop playsInline preload="metadata"
-        width={720}
-        height={1280}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: videoReady ? 1 : 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        onCanPlayThrough={handleVideoReady}
-      />
+      {/* Mobile video - only on fast connections */}
+      {shouldLoadVideo && (
+        <motion.video
+          ref={videoMobileRef}
+          className="absolute inset-0 z-[0] h-full w-full object-cover md:hidden"
+          style={{ objectPosition: '60% 15%', scale: videoScale }}
+          src="/photos/hero video mobile.mp4"
+          poster="/photos/hero.webp"
+          autoPlay muted loop playsInline preload="metadata"
+          width={720}
+          height={1280}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: videoReady ? 1 : 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          onCanPlayThrough={handleVideoReady}
+        />
+      )}
 
       {/* ── OVERLAYS ── */}
       {/* Base tint */}

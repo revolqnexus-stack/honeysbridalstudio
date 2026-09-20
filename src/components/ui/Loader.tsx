@@ -3,6 +3,11 @@ import { useEffect, useState } from 'react'
 
 const LETTERS = "Honey's".split('')
 
+// Faster animations on mobile
+const isMobile = typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
+const ANIMATION_DURATION = isMobile ? 1800 : 2200 // 400ms faster on mobile
+const EXIT_DELAY = isMobile ? 2500 : 3100 // Exit sooner on mobile
+
 export function Loader() {
   const [phase, setPhase] = useState<'in' | 'out' | 'done'>('in')
 
@@ -30,7 +35,7 @@ export function Loader() {
     const t1 = setTimeout(() => {
       clearInterval(scrollLock)
       setPhase('out')
-    }, 2200)
+    }, ANIMATION_DURATION)
     
     const t2 = setTimeout(() => {
       // Final scroll enforcement before allowing page interaction
@@ -53,7 +58,7 @@ export function Loader() {
           window.scrollTo(0, 0)
         })
       })
-    }, 3100) // Slightly longer to ensure slide-up animation completes
+    }, EXIT_DELAY)
     
     return () => {
       clearInterval(scrollLock)
