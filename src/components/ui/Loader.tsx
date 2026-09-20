@@ -7,6 +7,8 @@ export function Loader() {
   const [phase, setPhase] = useState<'in' | 'out' | 'done'>('in')
 
   useEffect(() => {
+    // Immediately force scroll to top on mount
+    window.scrollTo(0, 0)
     document.body.classList.add('no-scroll')
     
     // Disable browser scroll restoration
@@ -17,11 +19,15 @@ export function Loader() {
     // After letters + bar finish, slide up and exit
     const t1 = setTimeout(() => setPhase('out'), 2200)
     const t2 = setTimeout(() => {
+      // Force scroll to top BEFORE removing loader and re-enabling scroll
+      window.scrollTo(0, 0)
       setPhase('done')
       document.body.classList.remove('no-scroll')
       
-      // Force scroll to top regardless of hash or history
-      window.scrollTo(0, 0)
+      // One more forced scroll after a frame to catch any browser restoration
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0)
+      })
     }, 3000)
     
     return () => {
